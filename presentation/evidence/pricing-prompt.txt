@@ -1,0 +1,13 @@
+Estimate the total market price in Austria, at average market rates, to design, build and launch a finished project like this live site: https://rustamg16.github.io/002-sonnwerk/ (price it complete and launched, not a work in progress).
+
+Beyond what the browser shows, the package also includes work that is not visible to you:
+- Scroll-scrubbed canvas hero (an image sequence advanced frame by frame on scroll, not a video) and an infinite draggable gallery canvas.
+- Four AI-generated narrative film clips (field, harvest, extraction, bottle) plus stills, with direction and prompting.
+- Media pipeline: frame extraction, compression, responsive delivery.
+- Market research: channels, competitors, Austrian CBD advertising rules.
+- Marketing strategy: Austria-first go-to-market roadmap, Instagram plan, measurement framework, staged US demand test.
+- Discovery, brand direction, design spec, developer handoff.
+- WooCommerce/WordPress integration and full launch QA.
+- Project management and documentation.
+
+Give one total and a range per area, cite dated Austrian sources, and flag assumptions. Do not invent quotes or guaranteed compliance.

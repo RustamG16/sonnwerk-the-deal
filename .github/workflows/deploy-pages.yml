@@ -27,10 +27,11 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      # Publish only the landing bundle; internal and legacy builds stay local.
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: presentation
 
       - name: Deploy
         id: deployment

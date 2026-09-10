@@ -1,0 +1,5 @@
+# Only presentation/ (the landing bundle) is published. Everything else in dist/ is
+# local build output: the internal deal build must never reach this public repo.
+/internal.html
+/index.html
+/_t3*.html
