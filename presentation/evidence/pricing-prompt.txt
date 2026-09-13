@@ -1,13 +1,16 @@
-Estimate the total market price in Austria, at average market rates, to design, build and launch a finished project like this live site: https://rustamg16.github.io/002-sonnwerk/ (price it complete and launched, not a work in progress).
-
-Beyond what the browser shows, the package also includes work that is not visible to you:
-- Scroll-scrubbed canvas hero (an image sequence advanced frame by frame on scroll, not a video) and an infinite draggable gallery canvas.
-- Four AI-generated narrative film clips (field, harvest, extraction, bottle) plus stills, with direction and prompting.
-- Media pipeline: frame extraction, compression, responsive delivery.
-- Market research: channels, competitors, Austrian CBD advertising rules.
-- Marketing strategy: Austria-first go-to-market roadmap, Instagram plan, measurement framework, staged US demand test.
-- Discovery, brand direction, design spec, developer handoff.
-- WooCommerce/WordPress integration and full launch QA.
-- Project management and documentation.
-
-Give one total and a range per area, cite dated Austrian sources, and flag assumptions. Do not invent quotes or guaranteed compliance.
+Estimate what an average Austrian full-service agency would charge to deliver this project as a greenfield engagement (net, excl. 20% VAT; also show gross).
+Old site: sonn-werk.at (template WordPress/WooCommerce shop of an Austrian organic CBD farm).
+New product, built by one person: rustamg16.github.io/002-sonnwerk
+One-time scope, done + remaining, up to and including launch:
+- Discovery; audit of old site, brand, shop and customer journey
+- Market, competitor, channel and Austrian CBD advertising-rule research (68,300-word strategy pack)
+- Brand positioning, messaging, art direction, design system
+- UX/UI and German copy for 25 page routes (11 product and 5 category pages on shared templates)
+- Custom front end: scroll-driven image-sequence hero, draggable gallery canvas, motion, responsive
+- 4 AI-directed film chapters with stills, 652 optimised web images, plus an ad-safe media set
+- WooCommerce integration: existing back office, cart, checkout, payment, shipping
+- Technical SEO, analytics, consent, Search Console
+- Austria-first go-to-market, Instagram strategy and visual system, KPI framework, B2B acquisition system, US market-readiness plan
+- QA, launch, 30-day stabilisation, training, handover, project management
+Give: 1) one total and a low-high range; 2) hours and cost per area with the Austrian agency rates used; 3) separately, 12 months of post-launch growth services (social media, SEO, content, ads management, maintenance), excluding ad spend; 4) dated Austrian sources.
+Do not price it as a template or prototype. No invented quotes or compliance guarantees.
