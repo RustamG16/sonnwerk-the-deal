@@ -748,412 +748,6 @@ html:not(.js) .t3-flow__alt {
 
 .t3-oi__warn { margin: 12px var(--pad) var(--pad); }
 
-
-/* ---- Tab 04 · Der Deal ------------------------------------------------------
-   The configurator. One control, two sides, equal weight.
-   Semantic colour legend for this tab:
-     --gold     the chosen configuration, the recommended model, the slider fill,
-                my own series in the chart
-     --paper    SONNWERK's series in the chart (dashed + square marker, so identity
-                never rides on colour alone)
-     --blocked  a guardrail has been crossed
-     --open     unused headroom in the margin gauge
-   Nothing else carries colour.
-   -------------------------------------------------------------------------- */
-
-.t4 { --t4-stick: 196px; }
-
-/* ----------------------------------------------------------------- layout -- */
-
-.t4-work { display: grid; gap: calc(var(--gap) * 1.4); align-items: start; }
-
-@media (min-width: 1100px) {
-  .t4-work {
-    grid-template-columns: minmax(360px, 430px) 1fr;
-    gap: calc(var(--gap) * 1.6);
-  }
-  .t4-rail {
-    position: sticky;
-    top: calc(var(--t4-stick) + 12px);
-    max-height: calc(100vh - var(--t4-stick) - 28px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding-right: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--line) transparent;
-  }
-  .t4-rail::-webkit-scrollbar { width: 6px; }
-  .t4-rail::-webkit-scrollbar-thumb { background: var(--line); }
-}
-
-.t4-rail { display: grid; gap: var(--gap); align-content: start; }
-.t4-flow { display: grid; gap: calc(var(--gap) * 1.6); align-content: start; min-width: 0; }
-
-/* --------------------------------------------------- mobile summary bar --- */
-
-.t4-mini {
-  position: sticky;
-  top: var(--t4-stick);
-  z-index: 40;
-  display: flex;
-  gap: var(--gap);
-  flex-wrap: wrap;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 8px 12px;
-}
-.t4-mini__i { display: grid; gap: 1px; }
-.t4-mini__i b {
-  font-weight: 500; font-size: var(--t-small); color: var(--paper);
-  font-variant-numeric: tabular-nums;
-}
-.t4-mini__i:first-child b { color: var(--gold); }
-@media (min-width: 1100px) { .t4-mini { display: none; } }
-
-/* ------------------------------------------------------------ the slider -- */
-
-.t4-cfg__big { margin: 2px 0 4px; }
-#t4-cfg-up { display: inline-block; }
-
-.t4-slider { position: relative; height: 62px; margin: 2px 0 0; }
-
-.t4-slider__track {
-  position: absolute; left: 0; right: 0; top: 18px; height: 4px;
-  background: var(--line-soft);
-  border: 1px solid var(--line);
-  border-radius: 0;
-  pointer-events: none;
-}
-.t4-slider__fill {
-  position: absolute; inset: 0 auto 0 0; width: 100%;
-  transform: scaleX(0.4545); transform-origin: left center;
-  background: var(--gold);
-  /* the fill follows the thumb directly — never a transition here */
-}
-
-.t4-slider__input {
-  position: absolute; left: 0; right: 0; top: 0;
-  width: 100%; height: 40px; margin: 0;
-  background: transparent; -webkit-appearance: none; appearance: none;
-  cursor: ew-resize; touch-action: pan-y;
-}
-.t4-slider__input::-webkit-slider-runnable-track { height: 40px; background: transparent; }
-.t4-slider__input::-moz-range-track { height: 40px; background: transparent; }
-
-.t4-slider__input::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 14px; height: 26px; margin-top: 7px;
-  background: var(--gold); border: 1px solid var(--bg); border-radius: 1px;
-  cursor: ew-resize;
-  transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 120ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-.t4-slider__input::-moz-range-thumb {
-  width: 14px; height: 26px;
-  background: var(--gold); border: 1px solid var(--bg); border-radius: 1px;
-  cursor: ew-resize;
-  transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 120ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-@media (hover: hover) and (pointer: fine) {
-  .t4-slider__input:hover::-webkit-slider-thumb { transform: scaleY(1.1); }
-  .t4-slider__input:hover::-moz-range-thumb { transform: scaleY(1.1); }
-}
-.t4-slider__input:active::-webkit-slider-thumb {
-  transform: scaleY(1.16); box-shadow: 0 0 0 4px rgba(232, 163, 61, 0.16);
-}
-.t4-slider__input:active::-moz-range-thumb {
-  transform: scaleY(1.16); box-shadow: 0 0 0 4px rgba(232, 163, 61, 0.16);
-}
-.t4-slider__input:focus-visible { outline: none; }
-.t4-slider__input:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
-}
-.t4-slider__input:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
-}
-
-/* anchor ticks — clickable, labelled, never colour alone.
-   They sit strictly BELOW the thumb band so they can never swallow a drag. */
-
-.t4-slider__ticks {
-  position: absolute; left: 0; right: 0; top: 0; height: 62px;
-  pointer-events: none;
-}
-
-.t4-tick {
-  position: absolute; top: 34px; height: 28px;
-  display: flex; flex-direction: column;
-  padding: 0; min-width: 46px;
-  color: var(--cream-dim);
-  pointer-events: auto;
-  transition: color 120ms ease;
-}
-.t4-tick:nth-child(1) { transform: translateX(-30%); align-items: flex-start; }
-.t4-tick:nth-child(2) { transform: translateX(-50%); align-items: center; }
-.t4-tick:nth-child(3) { transform: translateX(-100%); align-items: flex-end; }
-
-.t4-tick__m {
-  position: absolute; top: -22px; width: 1px; height: 20px;
-  background: var(--line); pointer-events: none;
-  transition: background 120ms ease, height 120ms ease;
-}
-.t4-tick:nth-child(1) .t4-tick__m { left: 30%; }
-.t4-tick:nth-child(2) .t4-tick__m { left: 50%; }
-.t4-tick:nth-child(3) .t4-tick__m { left: 100%; }
-
-.t4-tick__l {
-  margin-top: 5px; font-size: var(--t-label); letter-spacing: 0.06em;
-  white-space: nowrap; font-variant-numeric: tabular-nums;
-}
-.t4-tick__l b { color: var(--paper); font-weight: 500; letter-spacing: 0.14em; }
-.t4-tick--rec .t4-tick__l b { color: var(--gold); }
-.t4-tick:hover { color: var(--paper); }
-.t4-tick.is-on .t4-tick__m { background: var(--gold); height: 26px; top: -25px; }
-.t4-tick.is-on .t4-tick__l { color: var(--paper); }
-
-/* ------------------------------------------------------------- rate segs -- */
-
-.t4-cfg__row {
-  display: grid; gap: 6px; margin-top: 14px;
-  padding-top: 12px; border-top: 1px solid var(--line-soft);
-}
-.t4-cfg__row .seg { justify-self: start; }
-.seg__b { transition: background 120ms ease, color 120ms ease, transform 120ms ease; }
-.seg__b:active { transform: scale(0.97); }
-
-/* ------------------------------------------------------------- readouts --- */
-
-.t4-reads { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
-@media (min-width: 620px) and (max-width: 1099px) { .t4-reads { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1360px) { .t4-reads { grid-template-columns: 1fr 1fr; } }
-
-.t4-read { display: grid; align-content: start; gap: 10px; }
-.t4-read .panel__head { margin-bottom: 0; }
-.t4-read__sub { margin-top: 2px; }
-
-/* the two party panels are deliberately identical: same head, same figure size,
-   same three rows, same footnote. One side may never out-shout the other. */
-.t4-read--pair { min-height: 0; }
-.t4-read--pair .stat__n { font-size: var(--t-num); }
-
-.t4-kv {
-  display: grid; grid-template-columns: 1fr auto; gap: 0 12px;
-  font-size: var(--t-small);
-}
-.t4-kv dt {
-  color: var(--cream-dim); padding: 5px 0;
-  border-bottom: 1px solid var(--line-soft);
-}
-.t4-kv dd {
-  text-align: right; padding: 5px 0; font-variant-numeric: tabular-nums;
-  border-bottom: 1px solid var(--line-soft);
-}
-.t4-kv--tight dt, .t4-kv--tight dd { padding: 4px 0; }
-.t4-kv dt:last-of-type, .t4-kv dd:last-of-type { border-bottom: 0; }
-
-.t4-bands { display: flex; gap: 6px; flex-wrap: wrap; }
-.t4-bands .chip { padding: 2px 7px; color: var(--cream-dim); }
-.t4-chip-gold { color: var(--gold); }
-
-.t4-scen { display: flex; flex-wrap: wrap; gap: 4px; }
-.t4-scen__b {
-  padding: 5px 9px; border: 1px solid var(--line); border-radius: var(--radius);
-  font-size: var(--t-small); color: var(--cream-dim);
-  font-variant-numeric: tabular-nums;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease;
-}
-.t4-scen__b:hover { color: var(--paper); border-color: var(--paper); }
-.t4-scen__b:active { transform: scale(0.97); }
-.t4-scen__b[aria-pressed="true"] {
-  background: var(--gold); color: var(--bg); border-color: var(--gold);
-}
-.t4-scen__free { display: grid; gap: 4px; margin-top: 2px; }
-
-/* --------------------------------------------------------- margin gauge --- */
-
-.t4-gauge { display: grid; gap: 10px; }
-.t4-gauge .panel__head { margin-bottom: 0; }
-
-.t4-gauge__bar {
-  position: relative; height: 26px;
-  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
-  overflow: hidden;
-}
-.t4-gauge__scale { position: absolute; inset: 0; }
-.t4-gauge__scale span {
-  position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line-soft);
-}
-.t4-gauge__fill {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 35.4%;
-  background: var(--gold); opacity: 0.55;
-  transition: width var(--dur) cubic-bezier(0.23, 1, 0.32, 1);
-}
-.t4-gauge.is-over .t4-gauge__fill { background: var(--blocked); opacity: 0.7; }
-.t4-gauge__limit {
-  position: absolute; top: -1px; bottom: -1px; width: 2px; left: 80%;
-  background: var(--blocked);
-}
-.t4-gauge__limit::after {
-  content: ''; position: absolute; left: -3px; top: 0; width: 8px; height: 5px;
-  background: var(--blocked);
-}
-.t4-gauge__mark {
-  position: absolute; top: -1px; bottom: -1px; width: 2px; left: 35.4%;
-  background: var(--paper);
-  transition: left var(--dur) cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.t4-gauge__axis {
-  position: relative; height: 30px;
-  font-size: var(--t-label); color: var(--cream-dimmer);
-  font-variant-numeric: tabular-nums;
-}
-.t4-gauge__axis span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
-.t4-gauge__axis span:nth-child(1) { left: 0; transform: none; }
-.t4-gauge__axis span:nth-child(2) { left: 25%; }
-.t4-gauge__axis span:nth-child(3) { left: 50%; }
-.t4-gauge__axis span:nth-child(4) { left: 80%; color: var(--blocked); text-align: center; }
-.t4-gauge__axis span:nth-child(5) { left: 100%; transform: translateX(-100%); }
-.t4-gauge__axis--lim .label { color: var(--blocked); letter-spacing: 0.1em; }
-
-.t4-gauge__read {
-  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-  padding-top: 8px; border-top: 1px solid var(--line-soft);
-}
-.t4-gauge.is-over #t4-g-val { color: var(--blocked); }
-
-.t4-warn { margin-top: 2px; }
-.t4-legend { padding-top: 8px; border-top: 1px solid var(--line-soft); }
-
-/* ------------------------------------------------------------- zahlplan --- */
-
-.t4-pay__note { padding: 12px var(--pad) var(--pad); max-width: 74ch; }
-
-/* -------------------------------------------------------- Block D cards --- */
-
-.t4-models { display: grid; gap: var(--gap); }
-.t4-models__head { margin-bottom: 0; }
-
-.t4-card { position: relative; display: grid; gap: 8px; align-content: start; }
-.t4-card__tag {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  font-size: var(--t-small); color: var(--cream-dim);
-}
-.t4-card__id {
-  display: inline-block; min-width: 1.6em; text-align: center;
-  border: 1px solid var(--line); border-radius: var(--radius);
-  font-size: var(--t-label); letter-spacing: 0.1em; padding: 1px 0; color: var(--paper);
-}
-.t4-card--rec .t4-card__id { border-color: var(--gold); color: var(--gold); }
-.t4-card__flag { margin-left: auto; }
-.t4-card__up { color: var(--paper); }
-.t4-card--rec .t4-card__up { color: var(--gold); }
-.t4-card__note { max-width: 40ch; }
-
-.t4-card__pick {
-  position: static; font-size: var(--t-label); letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--cream-dim); text-align: left;
-  padding-top: 8px; border-top: 1px solid var(--line-soft); margin-top: 2px;
-  transition: color 120ms ease;
-}
-.t4-card__pick::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
-.t4-card__pick:hover { color: var(--gold); }
-.t4-card:hover { background: var(--surface-2); }
-.t4-card.is-active { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--gold); }
-.t4-card.is-active .t4-card__pick { color: var(--gold); }
-.t4-card.is-near {
-  background: var(--surface-2); box-shadow: inset 3px 0 0 var(--gold-dim);
-}
-.t4-models__note { max-width: 78ch; }
-
-/* ------------------------------------------------------- Block E chart ---- */
-
-.t4-chart { padding: 4px var(--pad) 0; }
-.t4-svg { width: 100%; height: auto; font-family: var(--sans); overflow: visible; }
-
-.t4-ax line { stroke: var(--line-soft); stroke-width: 1; }
-.t4-ax line:first-child { stroke: var(--line); }
-.t4-axlab text, text.t4-axlab {
-  fill: var(--cream-dimmer); font-size: 10px; letter-spacing: 0.04em;
-  font-variant-numeric: tabular-nums;
-}
-.t4-axtitle {
-  fill: var(--cream-dim); font-size: 10px; letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.t4-ref line { stroke: var(--cream-dimmer); stroke-width: 1; stroke-dasharray: 1 4; }
-.t4-ref line.t4-ref--soft { stroke: var(--line); }
-.t4-reflab { fill: var(--cream-dim); font-size: 10px; font-variant-numeric: tabular-nums; }
-.t4-reflab--sm { fill: var(--cream-dimmer); font-size: 9px; letter-spacing: 0.04em; }
-
-.t4-scenline { stroke: var(--gold); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.5; }
-
-.t4-ser { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.t4-ser--r { stroke: var(--gold); }
-.t4-ser--c { stroke: var(--paper); stroke-dasharray: 7 4; }
-
-.t4-dot { stroke: var(--surface-1); stroke-width: 2; }
-.t4-dot--r { fill: var(--gold); }
-.t4-dot--c { fill: var(--paper); }
-
-.t4-crossd { fill: var(--bg); stroke: var(--gold); stroke-width: 2; }
-.t4-crosslab { fill: var(--gold); font-size: 10px; font-variant-numeric: tabular-nums; }
-
-.t4-serlab { font-size: 10.5px; font-variant-numeric: tabular-nums; }
-.t4-serlab--r { fill: var(--gold); }
-.t4-serlab--c { fill: var(--paper); }
-
-/* draw-in: one clip rect, 400 ms, first view only */
-#t4-cliprect { transform-box: fill-box; transform-origin: left center; }
-#t4-cliprect.is-drawing { animation: t4draw 400ms cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-@keyframes t4draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
-.t4-legend--chart { padding: 12px var(--pad) 0; }
-.t4-key { width: 18px; height: 2px; }
-.t4-key--r { background: var(--gold); }
-.t4-key--c {
-  background: linear-gradient(to right, var(--paper) 0 7px, transparent 7px 11px,
-              var(--paper) 11px 18px);
-}
-.t4-key--ref {
-  background: linear-gradient(to right, var(--cream-dimmer) 0 1px, transparent 1px 5px,
-              var(--cream-dimmer) 5px 6px, transparent 6px 10px,
-              var(--cream-dimmer) 10px 11px, transparent 11px 15px,
-              var(--cream-dimmer) 15px 16px);
-}
-.t4-chart__table { margin-top: 14px; border-top: 1px solid var(--line-soft); }
-.t4-chart__note, .t4-stair__note { padding: 12px var(--pad) var(--pad); max-width: 78ch; }
-
-/* ------------------------------------------------------- Block F stairs --- */
-
-#t4-cht tbody tr.t4-cht-on { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--gold); }
-#t4-cht tbody tr.t4-cht-on th { color: var(--gold); }
-
-#t4-stair tbody tr.is-off { color: var(--cream-dimmer); }
-#t4-stair tbody tr.is-off td.gold { color: var(--gold-dim); }
-#t4-stair tbody tr.is-off .dim { color: var(--cream-dimmer); }
-
-.t4-foot { max-width: 78ch; }
-
-/* --------------------------------------------------------------- no JS ---- */
-
-html:not(.js) .t4-mini,
-html:not(.js) .t4-tick,
-html:not(.js) .t4-card__pick,
-html:not(.js) .t4-slider__input { display: none; }
-html:not(.js) .t4-slider { height: 26px; }
-html:not(.js) .t4-cfg__row .seg__b[aria-pressed="false"] { display: none; }
-
-/* ------------------------------------------------------ reduced motion ---- */
-
-@media (prefers-reduced-motion: reduce) {
-  #t4-cliprect.is-drawing { animation: none; transform: none; }
-  .t4-gauge__fill, .t4-gauge__mark { transition: none; }
-}
-
 :root {
   --ink: #0d1408;
   --ink-2: #121c0c;
@@ -1376,6 +970,82 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
 #legacy-inline-4 .sh { margin-bottom: 6px; }
 .situation-intro ol + p, .situation-intro ol + .baseline-note { margin-top: 14px; }
 .situation-intro .situation-list { margin-bottom: 4px; }
+
+
+/* The Deal: the landing page's proposal slider, restyled for the Control Room.
+   The landing tokens used by the shared markup are mapped onto Control Room tokens here. */
+.deal-meter { --cream: var(--paper); --brass: #9e6714; --text-muted: #505549; font-size: 15px; line-height: 1.55; }
+.deal-meter h3 { margin: 0 0 10px; font-family: var(--serif); font-size: 22px; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; }
+.deal-meter .kicker { margin: 0 0 8px; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.deal-meter .detail-note { margin: 8px 0; color: var(--paper-dim); font-size: 13px; }
+
+.deal-offer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 18px; border: 1px solid var(--line); background: var(--line); }
+.deal-offer > div { padding: 18px 20px; background: var(--ink-2); }
+.deal-offer strong { display: block; margin: 6px 0 8px; color: var(--gold); font-family: var(--serif); font-size: clamp(24px, 2.2vw, 34px); font-weight: 520; letter-spacing: -.03em; line-height: 1; }
+.deal-offer p { color: var(--paper-dim); font-size: 13px; }
+.deal-covers { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 14px; border: 1px solid var(--line); background: var(--line); }
+.deal-covers > div { padding: 18px 20px; background: var(--ink-2); }
+.deal-covers ul { margin: 8px 0 0; padding-left: 18px; color: var(--paper-dim); font-size: 13px; }
+.deal-covers li + li { margin-top: 4px; }
+
+.deal-meter .meter-card { margin-top: 18px; padding: 32px 36px; border-top: 1px solid rgba(242,235,220,.3); background: #172011; }
+.deal-meter .meter-labels { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 12px; color: var(--gold); font-size: 13px; font-weight: 700; }
+.deal-meter .meter-card label { display: block; margin-bottom: 8px; font-weight: 700; }
+.deal-meter input[type=range] { display: block; width: 100%; height: 44px; accent-color: var(--gold); }
+.deal-meter .meter-explainer { max-width: 82ch; margin: 12px 0 0; color: #d4d0c5; font-size: 13px; }
+.deal-meter .deal-figures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 28px; }
+.deal-meter .deal-figures > div { padding-top: 14px; border-top: 1px solid rgba(242,235,220,.3); }
+.deal-meter .deal-figures span { display: block; color: #d4d0c5; font-size: 13px; }
+.deal-meter .deal-figures strong { display: block; margin-top: 4px; color: var(--gold); font-family: var(--serif); font-size: clamp(26px, 2.6vw, 40px); font-weight: 500; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+
+.deal-meter .deal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 36px; }
+.deal-meter .deal-grid h3 { color: var(--gold); }
+.deal-meter .deal-grid__inputs > p { color: #d4d0c5; font-size: 14px; }
+.deal-meter .annual-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+.deal-meter .annual-inputs label { font-size: 13px; font-weight: 700; }
+.deal-meter .annual-inputs input { display: block; width: 100%; margin-top: 5px; padding: 8px 10px; border: 1px solid #879080; border-radius: 4px; background: var(--paper); color: var(--ink); font-variant-numeric: tabular-nums; }
+.deal-meter .form-error { margin-top: 12px; color: #ffd28e; font-weight: 700; }
+.deal-meter .deal-grid__tiers table, .deal-meter .scenario-block table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+.deal-meter .deal-grid__tiers th, .deal-meter .deal-grid__tiers td, .deal-meter .scenario-block th, .deal-meter .scenario-block td { padding: 10px 8px; border-top: 1px solid rgba(242,235,220,.3); font-variant-numeric: tabular-nums; }
+.deal-meter .deal-grid__tiers th { font-weight: 500; }
+
+.deal-meter .chart-card { margin-top: 40px; padding: 28px; background: #f1e9d9; color: var(--ink); }
+.deal-meter .chart-card .kicker { margin-bottom: 4px; color: var(--brass); }
+.deal-meter .chart-card__head { display: flex; justify-content: space-between; align-items: start; gap: 32px; }
+.deal-meter .chart-card__head h3 { margin: 0; }
+.deal-meter .chart-card__head > p { font-size: 13px; white-space: nowrap; }
+.deal-meter .chart-key { display: inline-block; width: 18px; margin: 0 5px 2px 12px; border-top: 3px solid; }
+.deal-meter .chart-key--base { border-color: var(--brass); }
+.deal-meter .chart-key--selected { border-color: var(--ink); }
+.deal-meter .payment-chart { display: block; width: 100%; max-width: 760px; margin: 20px auto 0; overflow: visible; }
+.deal-meter .chart-grid { stroke: #c7c8bb; stroke-width: 1; }
+.deal-meter .chart-line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.deal-meter .chart-line--base { stroke: var(--brass); }
+.deal-meter .chart-line--selected { stroke: var(--ink); }
+.deal-meter .chart-labels, .deal-meter .chart-axis, .deal-meter .chart-series { fill: var(--text-muted); font-family: var(--sans); font-size: 13px; }
+.deal-meter .chart-series { font-weight: 700; }
+.deal-meter .chart-card__summary { margin: 0; font-weight: 700; }
+.deal-meter .chart-data { margin: 14px 0 0; padding-left: 20px; font-size: 13px; line-height: 1.5; }
+
+.deal-meter .scenario-block { display: grid; grid-template-columns: 1fr 1.65fr; gap: 40px; align-items: start; margin-top: 40px; }
+.deal-meter .table-wrap { overflow-x: auto; }
+.deal-meter .table-wrap--dark { border-top: 1px solid rgba(242,235,220,.3); }
+.deal-meter .scenario-block table { min-width: 520px; }
+.deal-meter .scenario-block td:last-child { font-weight: 700; }
+.deal-meter .deal-closing { margin-top: 36px; padding-top: 18px; border-top: 1px solid rgba(242,235,220,.35); color: var(--paper-dim); font-size: 13px; }
+.deal-meter .deal-closing p + p { margin-top: 8px; }
+
+@media (max-width: 1100px) {
+  .deal-offer { grid-template-columns: 1fr 1fr; }
+  .deal-meter .deal-grid, .deal-meter .scenario-block, .deal-covers { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .deal-offer, .deal-meter .deal-figures { grid-template-columns: 1fr; }
+  .deal-meter .meter-card { padding: 24px 18px; }
+  .deal-meter .chart-card { padding: 20px 14px; }
+  .deal-meter .chart-card__head { display: block; }
+  .deal-meter .chart-card__head > p { margin-top: 12px; white-space: normal; }
+}
 </style>
 </head>
 <body>
@@ -2193,419 +1863,34 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
 <section class="panel panel--flush"><div class="panel__head"><div><p class="eyebrow">Accessible editor</p><h3>Roadmap table</h3></div><span class="muted" id="roadmap-count"></span></div><div class="table-wrap"><table class="data-table" id="roadmap-table"><caption>Editable roadmap records</caption><thead><tr><th scope="col">Work item</th><th scope="col">Lane</th><th scope="col">Status</th><th scope="col">Owner</th><th scope="col">Timing</th><th scope="col">Effort</th><th scope="col">Dependencies</th><th scope="col">Edit</th></tr></thead><tbody></tbody></table></div></section>
 </section>
 </section>
-        <section id="panel-deal" class="view" role="tabpanel" aria-labelledby="tab-deal" hidden><header class="view-head legacy-head"><div><p class="section-num">04 / The Deal</p><h2>One offer, both sides visible.</h2></div><p>The calculator: payment plan, progressive revenue bands, what each side receives at any level of sales, and the gross-margin guardrail.</p></header>
-<div class="legacy-inline notranslate" id="legacy-inline-4"><div id="panel-4">    <div class="stack-l t4">
+        <section id="panel-deal" class="view" role="tabpanel" aria-labelledby="tab-deal" hidden><header class="view-head legacy-head"><div><p class="section-num">04 / The Deal</p><h2>€18,000 once, then a share of online sales.</h2></div><p>The same slider as the introduction. Move it to see what SONNWERK pays in total over four years, for any split between the one-time payment and the revenue share.</p></header>
+<div class="deal-meter">
+  <div class="deal-offer">
+    <div><span class="label">One-time payment</span><strong>€18,000</strong><p>Covers everything up to and including launch.</p></div>
+    <div><span class="label">Payment plan</span><strong>1, 3 or 6</strong><p>Instalments: at signing; at signing, +30 and +60 days; or monthly from signing. The total is the same.</p></div>
+    <div><span class="label">After launch</span><strong>Share only</strong><p>Growth work is paid from a staircase share of net online sales actually received: 18% on the first €100,000 each year, falling to 7%.</p></div>
+    <div><span class="label">Term</span><strong>48 months</strong><p>In 12-month blocks. No monthly minimum: in a month without sales, SONNWERK pays nothing.</p></div>
+  </div>
+  <div class="deal-covers">
+    <div><p class="kicker">Covered by the one-time payment</p><ul><li>Everything already delivered: design system, 25 page routes, film hero, gallery, 4 AI film chapters, 652 web images, the strategy pack</li><li>Everything before launch: WooCommerce integration, ad-safe media set, launch SEO, analytics and consent, Instagram system, B2B acquisition system, US readiness plan, QA, go-live, 30-day stabilisation, training and handover</li></ul></div>
+    <div><p class="kicker">Paid only from the share, after launch</p><ul><li>Social media and Instagram posts</li><li>SEO development and content</li><li>AI content and creative production</li><li>Campaigns, funnel and conversion improvement</li><li>US market extension and B2B expansion strategy</li><li>Website maintenance and a quarterly plan review</li></ul></div>
+  </div>
 
-      <div class="sh">
-        <p class="eyebrow"><span class="section-num">04</span>Der Deal</p>
-        <h2 class="sh__title">Ein Regler. Beide Seiten sichtbar.</h2>
-        <p class="sh__lead">
-          Ein Angebot: 18.000 € plus eine Treppe von 18 % auf 7 % des tatsächlich
-          vereinnahmten Netto-Onlineumsatzes. Kein Mindestabruf, 12-Monats-Blöcke über
-          einen Horizont von 48 Monaten. Die Stufen sind auf die von euch genannte
-          Ausgangsbasis gerechnet — über 15.000 € Onlineumsatz 2025, über 20.000 €
-          erwartet für 2026.
-        </p>
-      </div>
-
-      <!-- mobile: kompakte Zusammenfassung, klebt unter dem Kopf --------------- -->
-      <div class="t4-mini" id="t4-mini">
-        <span class="t4-mini__i"><span class="label">Einmalzahlung</span><b class="num" id="t4-mini-up">18.000 €</b></span>
-        <span class="t4-mini__i"><span class="label">Startbeteiligung</span><b class="num" id="t4-mini-pct">18 %</b></span>
-        <span class="t4-mini__i"><span class="label">Laufzeit</span><b class="num" id="t4-mini-term">48 Monate</b></span>
-      </div>
-
-      <div class="t4-work">
-
-        <!-- ============================================ Block A + B + C — Schiene -->
-        <div class="t4-rail" id="t4-rail">
-
-          <!-- Block A · das Angebot -->
-          <div class="panel panel--raised t4-cfg">
-            <div class="panel__head">
-              <h3 class="panel__title">Das Angebot</h3>
-              <p class="panel__meta">ein Preis, keine Modelle</p>
-            </div>
-
-            <p class="t4-cfg__big"><span class="stat__n stat__n--gold num" id="t4-cfg-up" data-v="18000">18.000 €</span></p>
-
-            <p class="note t4-cfg__lead">
-              18.000 € decken die restliche Arbeit bis zum Launch. Alles danach wird aus dem
-              Wachstum bezahlt, das daraus entsteht — als Treppe von 18 % auf 7 % des
-              vereinnahmten Netto-Onlineumsatzes. <strong>Kein Mindestabruf:</strong> In einem
-              Monat ohne Verkäufe zahlt ihr nichts.
-            </p>
-
-            <div class="t4-cfg__row">
-              <p class="label" id="t4-seg-label">Raten</p>
-              <div class="seg" id="t4-seg" role="group" aria-labelledby="t4-seg-label">
-                <button type="button" class="seg__b" data-n="1" aria-pressed="true">1 Rate</button>
-                <button type="button" class="seg__b" data-n="3" aria-pressed="false">3 Raten</button>
-                <button type="button" class="seg__b" data-n="6" aria-pressed="false">6 Raten</button>
-              </div>
-              <p class="note" id="t4-seg-hint">bei Unterzeichnung</p>
-            </div>
-          </div>
-
-          <!-- Block B · die vier Auslesen -->
-          <div class="t4-reads">
-
-            <!-- 1 · Konfiguration -->
-            <div class="panel t4-read">
-              <div class="panel__head"><h3 class="panel__title">Konfiguration</h3>
-                <p class="panel__meta" id="t4-k-model">Das Angebot</p></div>
-              <dl class="t4-kv">
-                <dt>Einmalzahlung</dt><dd class="num" id="t4-k-up">18.000 €</dd>
-                <dt>Zahlung jetzt</dt><dd class="num" id="t4-k-now">18.000 €</dd>
-                <dt>Laufzeit</dt><dd class="num" id="t4-k-term">48 Monate</dd>
-                <dt>Mindestabruf</dt><dd class="num" id="t4-k-min">0 € / Monat</dd>
-              </dl>
-              <p class="label t4-read__sub">Treppe — Anteil je Umsatzstufe</p>
-              <p class="t4-bands" id="t4-k-bands">
-                <span class="chip num">18 %</span>
-                <span class="chip num">14 %</span>
-                <span class="chip num">10 %</span>
-                <span class="chip num">7 %</span>
-              </p>
-            </div>
-
-            <!-- 2 · Szenario -->
-            <div class="panel t4-read">
-              <div class="panel__head"><h3 class="panel__title">Szenario</h3>
-                <p class="panel__meta">Vereinnahmter Netto-Onlineumsatz pro Jahr</p></div>
-              <div class="t4-scen" id="t4-scen" role="group" aria-label="Jahresumsatz für die Rechnung">
-                <button type="button" class="t4-scen__b" data-rev="20000" aria-pressed="false"><span class="num">20k €</span></button>
-                <button type="button" class="t4-scen__b" data-rev="50000" aria-pressed="false"><span class="num">50k €</span></button>
-                <button type="button" class="t4-scen__b" data-rev="100000" aria-pressed="true"><span class="num">100k €</span></button>
-                <button type="button" class="t4-scen__b" data-rev="200000" aria-pressed="false"><span class="num">200k €</span></button>
-                <button type="button" class="t4-scen__b" data-rev="400000" aria-pressed="false"><span class="num">400k €</span></button>
-                <button type="button" class="t4-scen__b" data-rev="700000" aria-pressed="false"><span class="num">700k €</span></button>
-              </div>
-              <p class="t4-scen__free">
-                <label class="label" for="t4-scen-input">Eigener Wert (€ pro Jahr)</label>
-                <input type="number" class="field num" id="t4-scen-input" min="0" step="10000" value="100000" inputmode="numeric">
-              </p>
-              <p class="note t4-read__sub">
-                Enthalten sind Shop, Instagram-Journeys, Marktplätze und weitere vereinbarte Onlinekanäle. Ausgeschlossen sind USt., Refunds, Chargebacks, Kund:innenversand, Payment- und Marktplatzgebühren.
-              </p>
-            </div>
-
-            <!-- 3 · Für SONNWERK -->
-            <div class="panel t4-read t4-read--pair">
-              <div class="panel__head"><h3 class="panel__title">Für SONNWERK</h3>
-                <p class="panel__meta">was ihr zahlt</p></div>
-              <p class="stat">
-                <span class="stat__n num" id="t4-c-year" data-v="18000">18.000 €</span>
-                <span class="stat__l">Umsatzanteil pro Jahr</span>
-              </p>
-              <dl class="t4-kv t4-kv--tight">
-                <dt>Effektiver Anteil</dt><dd class="num" id="t4-c-pct">18,0 %</dd>
-                <dt>Jahresanteil</dt><dd class="num" id="t4-c-ret">18.000 €</dd>
-                <dt>Gesamt über die Laufzeit</dt><dd class="num" id="t4-c-total">36.000 €</dd>
-              </dl>
-              <p class="note t4-read__sub" id="t4-c-break">
-                Basis ist der vereinnahmte Netto-Onlineumsatz aller vereinbarten digitalen Kanäle. Neue B2B- und Neumarkt-Kunden werden separat je Kunde provisioniert.
-              </p>
-            </div>
-
-            <!-- 4 · Für Rustam -->
-            <div class="panel t4-read t4-read--pair">
-              <div class="panel__head"><h3 class="panel__title">Für Rustam</h3>
-                <p class="panel__meta">was ich bekomme</p></div>
-              <p class="stat">
-                <span class="stat__n num" id="t4-r-total" data-v="18000">18.000 €</span>
-                <span class="stat__l">Umsatzanteil pro Jahr</span>
-              </p>
-              <dl class="t4-kv t4-kv--tight">
-                <dt>Effektiver Anteil</dt><dd class="num" id="t4-r-agency">18,0 %</dd>
-                <dt>Gesamt über die Laufzeit</dt><dd class="num" id="t4-r-vsbuy">36.000 €</dd>
-                <dt>Monatliches Minimum</dt><dd class="num" id="t4-r-min">0 €</dd>
-              </dl>
-              <p class="note t4-read__sub" id="t4-r-cross">
-                Jahreszahlung von SONNWERK und Jahreserhalt von Rustam sind dieselbe Zahl; das Gesamt über die Laufzeit steht separat.
-              </p>
-            </div>
-
-          </div><!-- /t4-reads -->
-
-          <!-- Block C · die Grenze -->
-          <div class="panel t4-gauge">
-            <div class="panel__head">
-              <h3 class="panel__title">Anteil an der Bruttomarge</h3>
-              <p class="panel__meta">Grenze <span class="num">40 %</span></p>
-            </div>
-
-            <div class="t4-gauge__bar">
-              <div class="t4-gauge__scale" aria-hidden="true">
-                <span style="left:0%"></span><span style="left:25%"></span>
-                <span style="left:50%"></span><span style="left:75%"></span><span style="left:100%"></span>
-              </div>
-              <div class="t4-gauge__fill" id="t4-g-fill" style="width:51.4%"></div>
-              <div class="t4-gauge__limit" id="t4-g-limit" style="left:80%" aria-hidden="true"></div>
-              <div class="t4-gauge__mark" id="t4-g-mark" style="left:51.4%" aria-hidden="true"></div>
-            </div>
-            <p class="t4-gauge__axis" aria-hidden="true">
-              <span class="num">0 %</span><span class="num">12,5 %</span><span class="num">25 %</span>
-              <span class="num t4-gauge__axis--lim">40 %<br><span class="label">Grenze</span></span>
-              <span class="num">50 %</span>
-            </p>
-            <p class="t4-gauge__read">
-              <span class="stat__n stat__n--sm num" id="t4-g-val" data-v="0.257">25,7 %</span>
-              <span class="note" id="t4-g-note">
-                <span class="num">18.000 €</span> von <span class="num">70.000 €</span> Bruttomarge
-                (70 % von <span class="num">100.000 €</span>).
-              </span>
-            </p>
-
-            <p class="warn t4-warn" id="t4-warn-margin" hidden>
-              <strong>Grenze überschritten.</strong>
-              Über 40 % der Bruttomarge — hier wird der Deal für beide Seiten unhaltbar.
-            </p>
-            <p class="warn t4-warn" id="t4-warn-share" hidden>
-              <strong>Grenze überschritten.</strong>
-              Die Startbeteiligung liegt über 20 % vom Umsatz. Diese Obergrenze habe ich mir
-              selbst gesetzt und sie gilt auch dann, wenn ihr sie anbietet.
-            </p>
-
-            <div class="legend t4-legend">
-              <span class="legend__i"><span class="legend__s" style="background:var(--gold)"></span>belegter Anteil der Bruttomarge</span>
-              <span class="legend__i"><span class="legend__s" style="background:var(--paper)"></span>Markierung des aktuellen Werts</span>
-              <span class="legend__i"><span class="legend__s" style="background:var(--blocked)"></span>Grenze bei 40 % — überschritten heißt: Deal unhaltbar</span>
-            </div>
-          </div>
-
-        </div><!-- /t4-rail -->
-
-        <!-- ========================================== Block D + E + F — Lauftext -->
-        <div class="t4-flow">
-
-          <!-- Zahlplan -->
-          <div class="panel panel--flush">
-            <div class="panel__head">
-              <h3 class="panel__title">Zahlplan</h3>
-              <p class="panel__meta" id="t4-pay-meta"><span class="num">1 Rate</span></p>
-            </div>
-            <div class="scroll-x" tabindex="0">
-              <table class="dtable dtable--compact" id="t4-pay">
-                <caption class="vh">Zahlplan der Einmalzahlung nach gewählter Ratenzahl</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Fälligkeit</th>
-                    <th scope="col" class="num">Betrag</th>
-                    <th scope="col" class="wrap">Anmerkung</th>
-                  </tr>
-                </thead>
-                <tbody id="t4-pay-body">
-                  <tr><th scope="row">bei Unterzeichnung</th><td class="num">18.000 €</td><td class="wrap dim">eine Rate</td></tr>
-                  <tr class="is-total"><th scope="row">Summe</th><td class="num">18.000 €</td><td class="wrap dim">einmalig</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="note t4-pay__note" id="t4-pay-note">
-              Die gewählte Einmalzahlung bleibt bei einer oder mehreren Raten gleich; der Zahlplan ändert nur die Fälligkeiten.
-            </p>
-          </div>
-
-          <!-- Block D · der Vergleich über vier Jahre -->
-          <div class="panel panel--flush t4-compare">
-            <div class="panel__head">
-              <h3 class="panel__title">Der Vergleich, der es entscheidet</h3>
-              <p class="panel__meta">über 48 Monate</p>
-            </div>
-            <div class="scroll-x" tabindex="0">
-              <table class="dtable dtable--compact">
-                <caption class="vh">Agenturweg und dieser Deal über vier Jahre im Vergleich</caption>
-                <thead>
-                  <tr><th scope="col">Position</th><th scope="col" class="wrap">Agenturweg</th><th scope="col" class="wrap">Dieser Deal</th></tr>
-                </thead>
-                <tbody>
-                  <tr><th scope="row" class="wrap">Aufbau Phase 1</th><td class="num">63.000 €</td><td class="num gold">18.000 €</td></tr>
-                  <tr><th scope="row" class="wrap">48 Monate Betrieb und Wachstum</th><td class="num">168.000 €</td><td class="wrap">Anteil am erzeugten Umsatz</td></tr>
-                  <tr class="is-total"><th scope="row" class="wrap">Summe über vier Jahre</th><td class="num">231.000 €</td><td class="wrap gold">18.000 € plus Beteiligung</td></tr>
-                  <tr><th scope="row" class="wrap">In einem Monat ohne Verkäufe</th><td class="wrap">voller Retainer, jeden Monat</td><td class="wrap gold">nichts</td></tr>
-                  <tr><th scope="row" class="wrap">Menschen zu steuern</th><td class="num">6–9 plus Account Manager</td><td class="num">1</td></tr>
-                  <tr><th scope="row" class="wrap">Anreiz</th><td class="wrap">abrechenbare Stunden</td><td class="wrap">euer Umsatz</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="note t4-compare__note">
-              Agenturvergleich: 63.000 € für den Aufbau, danach 3.500 € im Monat für denselben
-              Betriebsumfang. Raten geprüft am 31. August 2026. Die Differenz zu 18.000 € ist
-              kein Rabatt — sie ist gestundet und wird über die Beteiligung zurückverdient.
-            </p>
-          </div>
-
-          <!-- Block E · das Szenario-Diagramm -->
-          <div class="panel panel--flush t4-chartwrap">
-            <div class="panel__head">
-              <h3 class="panel__title">Beide Seiten über den Umsatz</h3>
-              <p class="panel__meta">€ pro Jahr Umsatz auf der Waagerechten</p>
-            </div>
-
-            <div class="t4-chart">
-              <svg id="t4-svg" viewBox="0 0 720 380" class="t4-svg" role="img"
-                   aria-labelledby="t4-svg-t t4-svg-d" preserveAspectRatio="xMidYMid meet">
-                <title id="t4-svg-t">Jährliche Zahlung von SONNWERK und jährlicher Erhalt von Rustam</title>
-                <desc id="t4-svg-d">Beide Jahreslinien verwenden dieselbe Beteiligungszahlung und liegen deshalb deckungsgleich. Das volle Gesamt über die Laufzeit inklusive Einmalzahlung steht separat in den Auslesen.</desc>
-
-                <defs>
-                  <clipPath id="t4-clip"><rect id="t4-cliprect" x="76" y="18" width="548" height="322"></rect></clipPath>
-                </defs>
-
-                <!-- Raster -->
-                <g class="t4-ax" id="t4-grid">
-                  <line x1="76" y1="334" x2="624" y2="334"></line>
-                  <line x1="76" y1="256.5" x2="624" y2="256.5"></line>
-                  <line x1="76" y1="179" x2="624" y2="179"></line>
-                  <line x1="76" y1="101.5" x2="624" y2="101.5"></line>
-                  <line x1="76" y1="24" x2="624" y2="24"></line>
-                </g>
-                <g class="t4-axlab" id="t4-ylab" text-anchor="end">
-                  <text x="66" y="338">0 €</text>
-                  <text x="66" y="260.5">25k €</text>
-                  <text x="66" y="183">50k €</text>
-                  <text x="66" y="105.5">75k €</text>
-                  <text x="66" y="28">100k €</text>
-                </g>
-                <g class="t4-axlab" text-anchor="middle">
-                  <text x="76" y="354">0</text>
-                  <text x="213" y="354">200k €</text>
-                  <text x="350" y="354">400k €</text>
-                  <text x="487" y="354">600k €</text>
-                  <text x="624" y="354">800k €</text>
-                </g>
-                <text class="t4-axtitle" x="350" y="372" text-anchor="middle">Jahresumsatz SONNWERK</text>
-
-                <!-- Bezugslinien -->
-                <g class="t4-ref">
-                  <line id="t4-ref-buy" x1="76" y1="273" x2="624" y2="273"></line>
-                  <text id="t4-ref-buyl" class="t4-reflab" x="630" y="269">63.000 €</text>
-                  <text id="t4-ref-buyl2" class="t4-reflab t4-reflab--sm" x="630" y="281">Agentur Phase 1</text>
-                  <line id="t4-ref-ret" x1="76" y1="299.1" x2="624" y2="299.1" class="t4-ref--soft"></line>
-                  <text id="t4-ref-retl" class="t4-reflab t4-reflab--sm" x="630" y="303">42.000 € Retainer / Jahr</text>
-                </g>
-
-                <!-- Szenario-Marke -->
-                <line id="t4-scen-line" class="t4-scenline" x1="247.2" y1="24" x2="247.2" y2="334"></line>
-
-                <!-- Serien -->
-                <g clip-path="url(#t4-clip)">
-                  <path id="t4-p-r" class="t4-ser t4-ser--r" d="M 76.0 284.0 L 103.4 284.0 L 130.8 273.2 L 158.2 251.5 L 185.6 231.3 L 213.0 215.8 L 240.4 200.3 L 267.8 184.8 L 295.2 169.3 L 322.6 153.8 L 350.0 138.3 L 377.4 127.5 L 404.8 116.6 L 432.2 105.8 L 459.6 94.9 L 487.0 84.1 L 514.4 73.2 L 541.8 62.4 L 569.2 51.5 L 596.6 40.7 L 624.0 29.8"></path>
-                  <path id="t4-p-c" class="t4-ser t4-ser--c" d="M 76.0 325.9 L 103.4 325.9 L 130.8 323.1 L 158.2 317.7 L 185.6 312.7 L 213.0 308.8 L 240.4 304.9 L 267.8 301.1 L 295.2 297.2 L 322.6 293.3 L 350.0 289.4 L 377.4 286.7 L 404.8 284.0 L 432.2 281.3 L 459.6 278.6 L 487.0 275.9 L 514.4 273.2 L 541.8 270.4 L 569.2 267.7 L 596.6 265.0 L 624.0 262.3"></path>
-                </g>
-
-                <!-- Schnittpunkt mit 63.000 € -->
-                <g id="t4-cross">
-                  <circle id="t4-cross-d" class="t4-crossd" cx="131" cy="273" r="4.5"></circle>
-                  <text id="t4-cross-l" class="t4-crosslab" x="139" y="264">Schnittpunkt 80.400 €</text>
-                </g>
-
-                <!-- Punkte am gewählten Szenario -->
-                <circle id="t4-dot-r" class="t4-dot t4-dot--r" cx="247.2" cy="196.4" r="5"></circle>
-                <rect   id="t4-dot-c" class="t4-dot t4-dot--c" x="242.2" y="299" width="10" height="10"></rect>
-
-                <!-- Direktbeschriftung -->
-                <text id="t4-lab-r" class="t4-serlab t4-serlab--r" x="255" y="190">36.000 € — Rustam gesamt</text>
-                <text id="t4-lab-c" class="t4-serlab t4-serlab--c" x="255" y="322">18.000 € — SONNWERK pro Jahr</text>
-              </svg>
-            </div>
-
-            <div class="legend t4-legend t4-legend--chart">
-              <span class="legend__i"><span class="legend__s t4-key t4-key--r"></span>Rustam — Erhalt pro Jahr</span>
-              <span class="legend__i"><span class="legend__s t4-key t4-key--c"></span>SONNWERK — Zahlung pro Jahr</span>
-              <span class="legend__i"><span class="legend__s t4-key t4-key--ref"></span>Die Jahreslinien sind deckungsgleich</span>
-            </div>
-
-            <div class="scroll-x t4-chart__table" tabindex="0">
-              <table class="dtable dtable--compact" id="t4-cht">
-                <caption class="vh">Dieselben Reihen als Zahlen: Jahresumsatz, Kosten für SONNWERK pro Jahr, meine Gesamtvergütung über die Laufzeit</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Jahresumsatz</th>
-                    <th scope="col" class="num">SONNWERK pro Jahr</th>
-                    <th scope="col" class="num">Rustam pro Jahr</th>
-                    <th scope="col" class="num">Anteil an der Bruttomarge</th>
-                  </tr>
-                </thead>
-                <tbody id="t4-cht-body">
-                  <tr><th scope="row" class="num">20.000 €</th><td class="num">3.600 €</td><td class="num">3.600 €</td><td class="num">25,7 %</td></tr>
-                  <tr><th scope="row" class="num">50.000 €</th><td class="num">9.000 €</td><td class="num">9.000 €</td><td class="num">25,7 %</td></tr>
-                  <tr class="t4-cht-on"><th scope="row" class="num">100.000 €</th><td class="num">18.000 €</td><td class="num">18.000 €</td><td class="num">25,7 %</td></tr>
-                  <tr><th scope="row" class="num">200.000 €</th><td class="num">32.000 €</td><td class="num">32.000 €</td><td class="num">22,9 %</td></tr>
-                  <tr><th scope="row" class="num">400.000 €</th><td class="num">54.000 €</td><td class="num">54.000 €</td><td class="num">19,3 %</td></tr>
-                  <tr><th scope="row" class="num">700.000 €</th><td class="num">81.000 €</td><td class="num">81.000 €</td><td class="num">16,5 %</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="note t4-chart__note" id="t4-chart-note">
-              Jahreszahlung und Jahreserhalt sind identisch. Das Gesamt über die Laufzeit inklusive Einmalzahlung wird separat in beiden Auslesen gezeigt.
-            </p>
-          </div>
-
-          <!-- Block F · die Treppe -->
-          <div class="panel panel--flush t4-stairwrap">
-            <div class="panel__head">
-              <h3 class="panel__title">Die Treppe, aufgeschlüsselt</h3>
-              <p class="panel__meta">bei <span class="num" id="t4-stair-rev">100.000 €</span> Jahresumsatz</p>
-            </div>
-            <div class="scroll-x" tabindex="0">
-              <table class="dtable dtable--compact" id="t4-stair">
-                <caption class="vh">Aufschlüsselung des Umsatzanteils nach Umsatzstufe beim aktuell eingestellten Modell</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Umsatzstufe</th>
-                    <th scope="col" class="wrap">Phase</th>
-                    <th scope="col" class="num">Anteil</th>
-                    <th scope="col" class="num">davon betroffen</th>
-                    <th scope="col" class="num">ergibt</th>
-                    <th scope="col" class="wrap">Warum</th>
-                  </tr>
-                </thead>
-                <tbody id="t4-stair-body">
-                  <tr>
-                    <th scope="row" class="num">bis 100.000 €</th><td class="wrap">Aufbauphase</td>
-                    <td class="num gold">18 %</td><td class="num">100.000 €</td><td class="num">18.000 €</td>
-                    <td class="wrap dim">Der Anteil trägt die gestundeten Aufbaukosten, solange der Shop klein ist.</td>
-                  </tr>
-                  <tr class="is-off">
-                    <th scope="row" class="num">100.001 – 250.000 €</th><td class="wrap">Wachstumsphase</td>
-                    <td class="num gold">14 %</td><td class="num">0 €</td><td class="num">0 €</td>
-                    <td class="wrap dim">Skalierung wird belohnt — der Anteil auf jeden weiteren Euro sinkt.</td>
-                  </tr>
-                  <tr class="is-off">
-                    <th scope="row" class="num">250.001 – 600.000 €</th><td class="wrap">Reifephase</td>
-                    <td class="num gold">10 %</td><td class="num">0 €</td><td class="num">0 €</td>
-                    <td class="wrap dim">Das Verhältnis kippt deutlich zugunsten von SONNWERK.</td>
-                  </tr>
-                  <tr class="is-off">
-                    <th scope="row" class="num">über 600.000 €</th><td class="wrap">Skalenphase</td>
-                    <td class="num gold">7 %</td><td class="num">0 €</td><td class="num">0 €</td>
-                    <td class="wrap dim">Der Grenzanteil ist klein genug, um Wachstum nie zu bestrafen.</td>
-                  </tr>
-                  <tr class="is-total">
-                    <th scope="row">Summe</th><td class="wrap"></td>
-                    <td class="num" id="t4-stair-eff">18,0 %</td><td class="num" id="t4-stair-rev2">100.000 €</td>
-                    <td class="num" id="t4-stair-sum">18.000 €</td>
-                    <td class="wrap dim">effektiver Anteil am Gesamtumsatz</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="note t4-stair__note" id="t4-stair-note">
-              Ein flacher Prozentsatz bestraft Wachstum. Diese Treppe macht das Gegenteil: je
-              mehr ihr verkauft, desto kleiner der Anteil an jedem zusätzlichen Euro.
-            </p>
-          </div>
-
-          <p class="note t4-foot">
-            Kein Vertrag und keine Steuerberatung. Diese Seite erzeugt die Eckpunkte —
-            die Formulierung macht ein österreichischer Anwalt.
-          </p>
-
-        </div><!-- /t4-flow -->
-      </div><!-- /t4-work -->
-    </div>
-</div></div>
+  <div class="meter-card">
+    <div class="meter-labels"><span>More one-time payment</span><span>More revenue share for Rustam</span></div>
+    <label for="cr-deal-meter">Choose the split</label>
+    <input id="cr-deal-meter" data-deal-meter type="range" min="0" max="100" value="0" step="0.5" aria-describedby="cr-meter-explainer">
+    <p class="meter-explainer" id="cr-meter-explainer">On the left, €18,000 applies with the base rates 18% / 14% / 10% / 7%. Toward the right, the one-time payment falls to €10,000. The first share band then rises from 18% to 30%; every further band rises in the same proportion. At €15,000, the first band is still 22.5%.</p>
+    <div class="deal-figures"><div><span>One-time payment</span><strong data-upfront>€18,000</strong></div><div><span>Share on the first €100,000</span><strong data-first-rate>18%</strong></div><div data-sales-dependent><span>Four years, current inputs</span><strong data-selected-total>€32,400</strong></div></div>
+  </div>
+  <div class="deal-grid">
+    <div class="deal-grid__inputs"><h3>Annual eligible online revenue</h3><p>The bands start again in every contract year. Enter only the net basis to be defined in the contract; VAT, returns, discounts, shipping and other deductions are settled in the contract.</p><div class="annual-inputs"><label>Year 1 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 2 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 3 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 4 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label></div><p class="form-error" data-form-error role="alert" hidden></p></div>
+    <div class="deal-grid__tiers"><h3>Annual bands</h3><p class="detail-note">Displayed percentages are rounded to two decimals. The calculation uses the unrounded rates.</p><table><thead><tr><th>Range</th><th>Base rate</th><th>Your selection</th></tr></thead><tbody data-tier-body><tr><th>Up to €100,000</th><td>18%</td><td>18%</td></tr><tr><th>Over €100,000 up to €250,000</th><td>14%</td><td>14%</td></tr><tr><th>Over €250,000 up to €600,000</th><td>10%</td><td>10%</td></tr><tr><th>Over €600,000</th><td>7%</td><td>7%</td></tr></tbody></table></div>
+  </div>
+  <div class="chart-card" data-sales-dependent><div class="chart-card__head"><div><p class="kicker">Four years · assumes continuation, not a guaranteed contract</p><h3>What SONNWERK pays in total, year by year</h3></div><p><span class="chart-key chart-key--base"></span>Base rate <span class="chart-key chart-key--selected"></span>Your selection</p></div><svg class="payment-chart" viewBox="0 0 640 280" role="img" aria-labelledby="cr-chart-title cr-chart-desc"><title id="cr-chart-title">Cumulative payments over four years</title><desc id="cr-chart-desc">The lines show the one-time payment plus the yearly shares, added up, for the base rate and the current selection.</desc><g class="chart-grid"><line x1="48" y1="24" x2="616" y2="24"></line><line x1="48" y1="130" x2="616" y2="130"></line><line x1="48" y1="236" x2="616" y2="236"></line></g><g class="chart-axis"><text x="0" y="28" data-chart-y-top>€32,400</text><text x="0" y="134" data-chart-y-mid>€25,200</text><text x="0" y="240" data-chart-y-bottom>€18,000</text></g><path class="chart-line chart-line--base" data-chart-base d="M48 236 L190 210 L332 184 L474 158 L616 132"></path><path class="chart-line chart-line--selected" data-chart-selected d="M48 236 L190 210 L332 184 L474 158 L616 132"></path><g class="chart-series"><text x="500" y="146" data-chart-series-base>Base rate</text><text x="500" y="126" data-chart-series-selected>Your selection</text></g><g class="chart-labels"><text x="48" y="264">Start</text><text x="181" y="264">Year 1</text><text x="323" y="264">Year 2</text><text x="465" y="264">Year 3</text><text x="590" y="264">Year 4</text></g></svg><p class="chart-card__summary" data-comparison-summary>Base rate: both lines coincide at four times €20,000 annual revenue; the total is €32,400.</p><ul class="chart-data" data-chart-values><li>Base rate: start €18,000; after year 1 €21,600; after year 2 €25,200; after year 3 €28,800; after year 4 €32,400.</li><li>Your selection: identical to the base rate.</li></ul></div>
+  <div class="scenario-block"><div><p class="kicker">Low and zero revenue visible</p><h3>Same online revenue every year: four-year total for SONNWERK</h3></div><div class="table-wrap table-wrap--dark" tabindex="0" aria-label="Scenario table, scrolls horizontally if needed"><table><thead><tr><th>Annual revenue</th><th>Base rate total</th><th>Your selection total</th><th>Difference</th></tr></thead><tbody data-scenario-body><tr><td>€0</td><td>€18,000</td><td>€18,000</td><td>€0</td></tr><tr><td>€10,000</td><td>€25,200</td><td>€25,200</td><td>€0</td></tr><tr><td>€20,000</td><td>€32,400</td><td>€32,400</td><td>€0</td></tr><tr><td>€50,000</td><td>€54,000</td><td>€54,000</td><td>€0</td></tr><tr><td>€100,000</td><td>€90,000</td><td>€90,000</td><td>€0</td></tr><tr><td>€250,000</td><td>€174,000</td><td>€174,000</td><td>€0</td></tr><tr><td>€700,000</td><td>€342,000</td><td>€342,000</td><td>€0</td></tr></tbody></table></div></div>
+  <div class="deal-closing"><p>Every total is what SONNWERK pays and what Rustam receives: it is one payment seen from both sides, so it is shown once. Totals include the one-time payment.</p><p>The calculation measures payments before other costs; it is neither personal net income nor company profit. No discounting, inflation, financing or taxes are taken into account. All values are a basis for negotiation.</p></div>
+</div>
 </section>
         <section id="panel-negotiation" class="view" role="tabpanel" aria-labelledby="tab-negotiation" hidden><header class="view-head"><div><p class="section-num">05 / Negotiation</p><h2>Questions, proposals and decisions share one record.</h2></div><p>Only information suitable before an NDA is seeded here. Private answers belong in the later authenticated workspace.</p></header>
 <div class="neg-grid">
@@ -2632,6 +1917,246 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
   </div>
   <script>window.WORKSPACE_DATA={"meta":{"schemaVersion":3,"updated":"2026-09-01","status":"Public prototype","title":"Sonnwerk Evidence Control Room","subtitle":"Work completed, proof, roadmap and the four-year commercial proposal","disclaimer":"Public working prototype. Effort is reconstructed from artifacts and is not a timesheet. Approved client-facing proposal figures are included; internal negotiation positions are excluded."},"summary":{"deliveredRange":"235–325","deliveredMidpoint":280,"phase":"Evidence consolidation and launch planning","progress":46,"method":"Package-level reconstruction from repository artifacts, output volume, dated logs and documented production work."},"workPackages":[{"id":"wp-discovery","title":"Discovery, design specification and brand direction","hoursMin":20,"hoursMax":30,"hoursLabel":"20–30","classification":"reconstructed","confidence":"medium","method":"Estimated from six planning documents, their scope and documented review cycles.","output":"Research synthesis, design specification, brand direction and implementation handoff.","evidenceIds":["ev-specs"],"visibility":"public"},{"id":"wp-engineering","title":"Website design and engineering","hoursMin":90,"hoursMax":130,"hoursLabel":"90–130","classification":"reconstructed","confidence":"high","method":"Estimated from application lines, rendered pages, Git changes, custom interactions and QA harness coverage.","output":"Astro website, 26 rendered pages, commerce prototype, custom motion systems and accessible degradation paths.","evidenceIds":["ev-pages","ev-loc","ev-git","ev-qa"],"visibility":"public"},{"id":"wp-media-production","title":"Journey media production","hoursMin":40,"hoursMax":null,"hoursLabel":"40+","classification":"self-reported","confidence":"medium","method":"Rustam's stated minimum, supported by approved clips, dated logs and the volume of extracted production frames.","output":"Four approved journey chapters plus supporting still-image production.","evidenceIds":["ev-media-source","ev-log"],"visibility":"public"},{"id":"wp-media-pipeline","title":"Media processing pipeline","hoursMin":20,"hoursMax":30,"hoursLabel":"20–30","classification":"reconstructed","confidence":"high","method":"Estimated from purpose-built processing scripts, frame sets and delivered responsive assets.","output":"Automated extraction, cropping and responsive delivery pipeline for 652 web assets.","evidenceIds":["ev-media","ev-frames","ev-scripts"],"visibility":"public"},{"id":"wp-strategy","title":"Market research and strategy system","hoursMin":50,"hoursMax":70,"hoursLabel":"50–70","classification":"reconstructed","confidence":"high","method":"Estimated from research datasets, analysis workflows and the completed strategy pack.","output":"Channel, funnel, brand, regulatory, competitive and evidence work packaged into an operating strategy.","evidenceIds":["ev-strategy","ev-research","ev-analysis-system"],"visibility":"public"},{"id":"wp-management","title":"Project management, review and documentation","hoursMin":15,"hoursMax":25,"hoursLabel":"15–25","classification":"reconstructed","confidence":"medium","method":"Estimated from the dated build log, handoffs, fix plans and verification cycles.","output":"Decision trace, implementation planning, review coordination and technical handoff.","evidenceIds":["ev-log","ev-specs"],"visibility":"public"}],"evidence":[{"id":"ev-pages","group":"Website","label":"Rendered pages","value":"26","unit":"static pages","detail":"Twelve Astro route files currently render 26 pages across the home, farm, horse-work, gallery, shop, category, product, cart and legal routes.","source":"site/src/pages/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-loc","group":"Website","label":"Application source","value":"2,683","unit":"lines across 29 files","detail":"Astro, JavaScript, TypeScript content models and project CSS measured in the original delivery dossier.","source":"site/src/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-git","group":"Engineering","label":"Recorded Git additions","value":"14,100","unit":"inserted lines","detail":"The original delivery window records 492 deletions and 956 touched paths. Counts describe output volume, not time.","source":"git log --numstat","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-qa","group":"Quality","label":"Verification screenshots","value":"121","unit":"generated checks","detail":"Four QA scripts covered console health, missing assets, contrast and scroll-linked interaction states.","source":"site/qa/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-media","group":"Media","label":"Delivered web media","value":"652","unit":"responsive files","detail":"Production output includes journey frames, product images, gallery assets and page-specific responsive image sets.","source":"site/public/media/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-frames","group":"Media","label":"Journey frames","value":"582","unit":"desktop and mobile frames","detail":"Four scroll-scrubbed chapters were assembled into dedicated desktop and compact frame sequences.","source":"site/public/media/journey/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-media-source","group":"Media","label":"Approved journey chapters","value":"4","unit":"source clips","detail":"Approved source chapters and associated iterations support the minimum production-time statement.","source":"assets-in/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-scripts","group":"Media","label":"Processing tools","value":"5","unit":"Python scripts","detail":"Purpose-built scripts extract, crop and prepare the responsive media system.","source":"scripts/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-strategy","group":"Strategy","label":"Completed strategy pack","value":"68,300","unit":"words","detail":"Channel, funnel, brand, regulatory, competitive, copy and evidence deliverables form the completed pack.","source":"marketing/output/2026-08-26-sonnwerk-strategy/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-research","group":"Strategy","label":"Primary research sets","value":"7","unit":"datasets","detail":"Competitor copy, pricing, advertising, agritourism, regulatory and publishing evidence were collected.","source":"data/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-analysis-system","group":"Strategy","label":"Analysis system","value":"8 + 18","unit":"specialists and skills","detail":"The strategy work includes focused roles, reusable procedures and an evidence gate.","source":"marketing/.claude/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-specs","group":"Documentation","label":"Planning documents","value":"16,169","unit":"words","detail":"Design specification, handoff, correction plans, media guidance and motion planning.","source":"files/","classification":"measured","confidence":"high","visibility":"public"},{"id":"ev-log","group":"Documentation","label":"Dated build record","value":"1","unit":"continuous log","detail":"The log records retakes, workarounds, deviations and implementation decisions across the project.","source":"LOG.md","classification":"measured","confidence":"high","visibility":"public"}],"roadmap":{"lanes":["Delivered","Current","Planned"],"nodes":[{"id":"rm-discovery","title":"Discovery and design direction","lane":"Delivered","status":"complete","owner":"Rustam","timing":"Completed","effort":"20–30 h","notes":"Research synthesis and design contract.","dependencies":[],"x":0,"visibility":"public"},{"id":"rm-site","title":"Website system","lane":"Delivered","status":"complete","owner":"Rustam","timing":"Completed","effort":"90–130 h","notes":"Twenty-six rendered pages and custom interaction systems.","dependencies":["rm-discovery"],"x":1,"visibility":"public"},{"id":"rm-media","title":"Media system","lane":"Delivered","status":"complete","owner":"Rustam","timing":"Completed","effort":"60–70+ h","notes":"Production plus responsive processing pipeline.","dependencies":["rm-discovery"],"x":2,"visibility":"public"},{"id":"rm-strategy","title":"Strategy and research pack","lane":"Delivered","status":"complete","owner":"Rustam","timing":"Completed","effort":"50–70 h","notes":"Research, compliance and market operating system.","dependencies":["rm-discovery"],"x":3,"visibility":"public"},{"id":"rm-control","title":"Evidence Control Room","lane":"Current","status":"active","owner":"Rustam","timing":"Now","effort":"Prototype","notes":"Public pre-NDA workspace and evidence ledger.","dependencies":["rm-site","rm-strategy"],"x":1,"visibility":"public"},{"id":"rm-validation","title":"Product and compliance validation","lane":"Current","status":"blocked","owner":"Joint","timing":"Before final scope","effort":"Decision gate","notes":"Requires verified product facts after the appropriate confidentiality step.","dependencies":["rm-strategy"],"x":2,"visibility":"public"},{"id":"rm-commerce","title":"Commerce integration","lane":"Planned","status":"planned","owner":"Rustam","timing":"Build to launch","effort":"40–60 h","notes":"Real catalogue, cart, pricing and checkout integration.","dependencies":["rm-control","rm-validation"],"x":1,"visibility":"public"},{"id":"rm-hygiene","title":"Launch hygiene","lane":"Planned","status":"planned","owner":"Rustam","timing":"Before 10 November 2026","effort":"25–35 h","notes":"Search, redirects, structured data, measurement and consent.","dependencies":["rm-commerce"],"x":2,"visibility":"public"},{"id":"rm-route","title":"Market route decision","lane":"Planned","status":"decision","owner":"Joint","timing":"After discovery","effort":"Decision gate","notes":"Choose the initial market and operating route from verified information.","dependencies":["rm-validation"],"x":3,"visibility":"public"},{"id":"rm-launch","title":"Verified launch","lane":"Planned","status":"planned","owner":"Joint","timing":"By 10 November 2026","effort":"15–20 h QA","notes":"Final verification, cutover and operating handoff, ahead of the Christmas season.","dependencies":["rm-hygiene","rm-route"],"x":4,"visibility":"public"}]},"decisions":[{"id":"dec-public","date":"2026-08-31","title":"Public prototype before private workspace","status":"accepted","owner":"Joint","rationale":"Demonstrate the operating model without publishing confidential information.","relatedNodeIds":["rm-control"],"visibility":"public"},{"id":"dec-direction","date":"2026-08-31","title":"Evidence Control Room direction","status":"accepted","owner":"Rustam","rationale":"Lead with proof of completed work while establishing planning and negotiation workflows.","relatedNodeIds":["rm-control"],"visibility":"public"},{"id":"dec-hours","date":"2026-08-31","title":"Present effort as a reconstructed range","status":"accepted","owner":"Rustam","rationale":"No contemporaneous timesheet exists; range, method and evidence are more defensible than false precision.","relatedNodeIds":["rm-discovery","rm-site","rm-media","rm-strategy"],"visibility":"public"},{"id":"dec-recalibrated","date":"2026-09-01","title":"Commercial terms recalibrated to the stated revenue base","status":"accepted","owner":"Rustam","rationale":"The earlier bands broke at €150,000 / €400,000 / €1,000,000 against a stated online base of roughly €20,000 a year. Bands now break at €100,000 / €250,000 / €600,000, the three upfront anchors collapse to a single €18,000 offer, and the term is stated as 12-month renewing blocks over a 48-month horizon to match the €231,000 four-year comparison.","relatedNodeIds":["rm-control"],"visibility":"public"}],"negotiation":[{"id":"neg-offer","topic":"The offer","question":"€18,000 upfront plus a staircase share of 18 / 14 / 10 / 7 per cent of verified net online sales, with no monthly minimum.","owner":"Rustam","status":"discussing","notes":"Bands are calibrated to the stated €20,000 online base, not to a hypothetical one. The effective share falls from 18% to 11.6% between €100,000 and €700,000 of annual sales.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-base","topic":"Compensation base","question":"Net sales received through the agreed digital channels, plus a separate per-account commission on new B2B, white-label and new-market revenue introduced by Rustam.","owner":"Joint","status":"discussing","notes":"Online alone is 10–24% of consumer revenue. SONNWERK's answer to question 3 states the objective as total sales, not one channel. Existing B2B stays excluded.","relatedNodeId":"rm-route","visibility":"public"},{"id":"neg-existing","topic":"Existing online business","question":"The share applies to all agreed net online sales; the existing base is reflected in the upfront payment rather than carved out.","owner":"SONNWERK","status":"answered","notes":"This follows SONNWERK's stated preference in answer 30. The twelve-month pre-launch figure is still recorded, as a measurement record.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-term","topic":"Term and renewal","question":"Twelve-month initial block, renewing automatically in 12-month blocks to a 48-month horizon unless either side gives 60 days' notice at a review point.","owner":"Joint","status":"discussing","notes":"SONNWERK asked for a 12-month initial term and no indefinite commitment (answer 38). The €231,000 comparison and the deferred build cost are four-year figures. Termination without cause inside 24 months triggers the clawback.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-budget","topic":"Funded growth budget","question":"What acquisition budget is available, and under what conditions is it released?","owner":"SONNWERK","status":"open","notes":"SONNWERK has stated that customs-related regulatory costs make holding a financial reserve the current priority (answer 5F). The share is paid out of revenue that acquisition spend produces; this is the deal's largest open dependency.","relatedNodeId":"rm-launch","visibility":"public"},{"id":"neg-minimum","topic":"Monthly minimum","question":"None. In a month with no sales, SONNWERK pays nothing.","owner":"SONNWERK","status":"answered","notes":"SONNWERK declined a minimum credited against the share (answer 35). Accepted. Against a €3,500 monthly agency retainer this is the largest single concession in the deal.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-ip","topic":"Ownership and independence","question":"SONNWERK owns its brand, content and data outright and receives permanent unrestricted rights to everything built for the shop.","owner":"Joint","status":"answered","notes":"Follows answer 37. Pre-existing frameworks and reusable components stay Rustam's IP, licensed permanently. The shop never becomes dependent on the partnership continuing; the deferred value is protected by the clawback instead.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-access","topic":"Verification requirement","question":"Read-only sales and payment access, monthly reporting and an independent accountant-check right.","owner":"Joint","status":"answered","notes":"Covers WooCommerce, payment and marketplace accounts, and prohibits moving sales to another channel or entity to avoid the share.","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-launch","topic":"Launch timing and platform","question":"Launch by 10 November 2026 at the latest, on the existing WooCommerce backend.","owner":"Joint","status":"answered","notes":"SONNWERK named the date in answer 28; the Christmas season is its strongest period. Commerce integration, approval, compliance review and final QA close before launch.","relatedNodeId":"rm-commerce","visibility":"public"},{"id":"neg-approval","topic":"Approval and cadence","question":"Johannes and Thomas give final written approval; contact at least twice weekly with a short daily exchange.","owner":"Joint","status":"answered","notes":"Approval turnaround is about one week, and within hours when urgent (answers 25 and 26).","relatedNodeId":"rm-control","visibility":"public"},{"id":"neg-markets","topic":"Target markets and US openness","question":"Austria/DACH is the initial focus; SONNWERK is open to evaluating a separate US route and the compliance work behind it.","owner":"Joint","status":"answered","notes":"Openness to evaluation is not a route, partner or investment commitment. Product rebranding is explicitly not a current priority, and the logo does not change (answers 1 and 22).","relatedNodeId":"rm-route","visibility":"public"}],"dealTerms":{"revenueBands":[100000,250000,600000],"scenarios":[20000,50000,100000,200000,400000,700000],"models":[{"id":"P","label":"The offer — €18,000 plus an agreed share","upfront":18000,"bands":[18,14,10,7],"term":48,"min":0,"note":"One price. €18,000 covers the remaining build to launch; everything after launch is paid out of the growth it produces. No monthly minimum. 12-month blocks, 48-month horizon.","recommended":true,"source":"data/deal.json#anchors.P","classification":"proposed-client-facing","visibility":"public"}],"context":[{"id":"deal-delivered","label":"Delivered effort","value":"235–325 h","detail":"280-hour reconstructed midpoint; not a timesheet.","source":"workPackages","classification":"reconstructed","visibility":"public"},{"id":"deal-remaining","label":"Remaining Phase 1","value":"145–215 h","detail":"Commerce, ad-safe media, market adaptation, launch hygiene and final QA.","source":"data/deal.json#flow.f1","classification":"reconstructed","visibility":"public"},{"id":"deal-delivery-cost","label":"Delivery-cost reference","value":"€39,100","detail":"460-hour total midpoint at the published €85 blended reference rate.","source":"data/deal.json#constants","classification":"approved-client-facing","visibility":"public"},{"id":"deal-agency","label":"Four-year agency comparison","value":"€231,000","detail":"€63,000 Phase 1 build plus 48 months at a €3,500 monthly retainer for the same operating scope.","source":"data/deal.json#constants","classification":"approved-client-facing","visibility":"public"},{"id":"deal-base","label":"Stated online base","value":"€15k → €20k","detail":"SONNWERK-reported online-shop revenue: more than €15,000 in 2025, more than €20,000 expected in 2026. Online is 10–24% of consumer-product revenue.","source":"pre-NDA discovery, answers 30 and 5D","classification":"client-stated","visibility":"public"},{"id":"deal-term","label":"Term","value":"12-month blocks","detail":"Initial 12 months, renewing automatically in 12-month blocks to a 48-month horizon unless either side gives 60 days' notice at a review point.","source":"data/deal.json#clauses.c14","classification":"proposed-client-facing","visibility":"public"}]},"assistant":{"intents":[{"id":"ai-completed","keywords":["completed","done","delivered","built"],"answer":"The delivered work spans discovery and design, website engineering, media production and processing, market strategy, research, quality assurance and project management. Open Work & Proof for the package-level ledger.","sourceIds":["ev-pages","ev-media","ev-strategy","ev-qa"],"visibility":"public"},{"id":"ai-hours","keywords":["hours","time","280","estimate","timesheet"],"answer":"The workspace shows 235–325 reconstructed hours with a 280-hour midpoint. These are package-level estimates derived from artifacts, output volume and dated logs; they are not logged timesheet hours. The 40+ media-production minimum is self-reported and separately labeled.","sourceIds":["ev-specs","ev-git","ev-media-source","ev-log"],"visibility":"public"},{"id":"ai-evidence","keywords":["proof","evidence","source","verify"],"answer":"Every headline claim maps to a repository-relative source and a classification: measured, reconstructed or self-reported. Select a proof row to inspect its method, source and confidence.","sourceIds":["ev-loc","ev-qa","ev-strategy"],"visibility":"public"},{"id":"ai-blockers","keywords":["blocked","blocker","risk","launch"],"answer":"The public roadmap shows validation, commerce integration, launch hygiene and a market-route decision as the main gates before a verified launch. Confidential answers are intentionally absent.","sourceIds":["ev-log"],"visibility":"public"},{"id":"ai-roadmap","keywords":["roadmap","plan","next","dependency"],"answer":"Open Roadmap to edit owners, timing, effort, status and dependencies. The diagram and table share the same local state and can be exported as JSON.","sourceIds":["ev-specs"],"visibility":"public"},{"id":"ai-deal","keywords":["price","percentage","revenue","margin","commercial","deal","model","share","cost","term"],"answer":"The offer is €18,000 upfront plus a staircase share of verified net online sales: 18% up to €100,000 a year, 14% to €250,000, 10% to €600,000 and 7% above that. No monthly minimum. Twelve-month blocks, renewing to a 48-month horizon. Bought as agency work the same scope is roughly €231,000 over four years. Open The Deal for the calculator.","sourceIds":["ev-git"],"visibility":"public"},{"id":"ai-base","keywords":["base","online","b2b","channel","baseline"],"answer":"The share is calculated on net sales received through the agreed digital channels — shop, social commerce journeys, marketplaces and further agreed online channels — after VAT, refunds, chargebacks, customer shipping and payment or marketplace fees. Existing B2B customers are excluded. New B2B, white-label and new-market business introduced by Rustam carries a separate per-account commission.","sourceIds":["ev-strategy"],"visibility":"public"}]}};</script>
   <script>window.LEGACY_DEAL={"meta":{"version":"3.0","updated":"2026-09-01","status":"Draft","title":"SONNWERK × Rustam Gurbanov","subtitle":"Deal room — what exists, what remains, and how a four-year partnership is priced","disclaimer":"Not a contract. This document produces the terms an Austrian lawyer then drafts. Not legal or financial advice."},"constants":{"agencyBuyout":63000,"agencyPhase1Low":55000,"agencyPhase1High":78000,"agencyPhase2Total":168000,"agencyTotal":231000,"retainerMonthly":3500,"grossMarginPct":0.7,"einmalDiscount":0,"maxRevenueShare":0.2,"marginGuardrail":0.4,"deliveryCost":39100,"blendedRate":85,"totalHoursMid":460,"baselineOnline2025":15000,"baselineOnline2026":20000,"termMonths":48},"headline":{"claim":"Fifteen specialist roles, one person, one price.","lines":["The website is built: 26 pages, 2,683 lines of application code, 652 delivered images, an automated QA harness.","Alongside it a 68,300-word strategy pack, original market research, and a regulatory verification that corrected the picture from July.","Delivered effort is reconstructed at approximately 280 hours; it is not a timesheet.","What remains to launch is approximately 180 hours, with a reconstructed range of 145 to 215 hours.","Bought as agency work, this scope costs roughly €231,000 over four years. The offer is €18,000 plus an agreed share of the revenue it produces.","The share is a staircase: 18% while the shop is small, falling to 7% once it is large. The share of gross margin falls as SONNWERK grows — it never rises."],"comparison":[{"row":"Delivered work","agency":"reconstructed, not logged","deal":"approximately 280 h","audience":"both"},{"row":"Remaining work to launch","agency":"reconstructed range 145–215 h","deal":"approximately 180 h","audience":"both"},{"row":"Four-year cost","agency":"€231,000 (€63,000 build + 48 × €3,500 retainer)","deal":"€18,000 plus an agreed share","audience":"both"},{"row":"Upfront payment","agency":"€63,000 for Phase 1 alone","deal":"€18,000, in up to 6 instalments","audience":"both"},{"row":"Paid when revenue is zero","agency":"full retainer, every month","deal":"nothing — no monthly minimum","audience":"both"},{"row":"Term","agency":"rolling retainer","deal":"12-month blocks, 48-month horizon","audience":"both"},{"row":"Revenue basis","agency":"not applicable","deal":"verified net sales through the agreed digital channels, plus separately commissioned new B2B","audience":"both"}]},"anchors":[{"id":"P","name":"Das Angebot","label":"€18,000 plus an agreed share","upfront":18000,"bands":[18,14,10,7],"term":48,"min":0,"note":"One price. €18,000 covers the remaining build to launch; everything after launch is paid out of the growth it produces. No monthly minimum — in a month with no sales, SONNWERK pays nothing.","recommended":true}],"slider":{"min":18000,"max":18000,"step":500,"default":18000},"instalments":[{"n":1,"label":"1 instalment","hint":"at signing"},{"n":3,"label":"3 instalments","hint":"signing, +30 days, +60 days"},{"n":6,"label":"6 instalments","hint":"monthly from signing"}],"revenueBands":[100000,250000,600000],"bandLabels":[{"range":"up to €100,000","phase":"Build-up","why":"The share carries the deferred build cost while the shop is still small."},{"range":"€100,001 – €250,000","phase":"Growth","why":"Scaling is rewarded — the share on every further euro falls."},{"range":"€250,001 – €600,000","phase":"Maturity","why":"The ratio tips decisively toward SONNWERK."},{"range":"above €600,000","phase":"Scale","why":"The marginal share is small enough never to punish growth."}],"staircaseNote":"Bands are calibrated to the base SONNWERK actually reported: more than €15,000 of online revenue in 2025 and more than €20,000 expected in 2026. The staircase is marginal, not flat — revenue in each band is charged at that band's rate. The effective share therefore falls from 18% to 11.6% between €100,000 and €700,000 of annual online sales.","scenarios":[20000,50000,100000,200000,400000,700000],"scenarioDefault":100000,"evidence":[{"id":"routes","group":"Website","label":"Pages built","value":"26","unit":"static pages","detail":"12 route files render 26 pages: home, farm, work with the horse, gallery, shop, 5 categories, 11 products, cart, imprint, terms, privacy, 404.","source":"site/src/pages/","audience":"both"},{"id":"loc","group":"Website","label":"Lines of application code","value":"2,683","unit":"lines across 29 files","detail":"19 .astro (1,834 lines), 6 .js (542), 3 .ts content model (200), 1 .css (106). Astro 4 static, vanilla JS, GSAP 3 + ScrollTrigger, Lenis. No React, no CSS framework.","source":"site/src/","audience":"both"},{"id":"inserts","group":"Website","label":"Lines inserted","value":"14,100","unit":"against 492 deleted","detail":"956 files touched, 11 commits in the window 14 – 27 July 2026, sole author. Few, large, tested commits — the volume is the honest measure, not the commit count.","source":"git log --numstat","audience":"both"},{"id":"flipbook","group":"Website","label":"Journey flipbook","value":"582","unit":"frames, scroll-scrubbed","detail":"389 desktop and 193 mobile frames, four chained chapters with 8-frame crossfades at all three seams. Deliberately not video.currentTime scrubbing, which stalls in most browsers.","source":"site/src/scripts/flipbook.js, journey.js","audience":"both"},{"id":"pferd","group":"Website","label":"Work with the horse","value":"379","unit":"lines, six chapters","detail":"Six distinctly templated chapters, a sticky tag rail, the scroll-drawn rein trace in SVG, masked clip-path image reveals. The deepest single piece of craft on the site.","source":"site/src/pages/arbeit-mit-dem-pferd.astro","audience":"both"},{"id":"galerie","group":"Website","label":"Gallery canvas","value":"∞","unit":"drag canvas with wrap","detail":"Pointer drag plus wheel, lerp inertia, modulo wrap on both axes.","source":"site/src/pages/galerie.astro","audience":"both"},{"id":"qa","group":"Quality","label":"Verification screenshots","value":"121","unit":"generated automatically","detail":"4 QA scripts rather than manual checking: screenshot.mjs, scroll-stops.mjs, full-audit.mjs, contrast-check.mjs. Checked at 1440 / 1920 / 390 px for console errors, 404s, contrast and scroll-linked motion.","source":"site/qa/","audience":"both"},{"id":"a11y","group":"Quality","label":"Reduced-motion & JS-off paths","value":"100%","unit":"of all animations","detail":"Every animation has a prefers-reduced-motion path and a JS-off fallback. Elements hidden for scroll reveals are hidden only under html.js — a visitor without JavaScript sees all content.","source":"site/src/styles/global.css","audience":"both"},{"id":"media-out","group":"Media","label":"Delivered web media","value":"652","unit":"files, 35 MB","detail":"389 desktop frames (23 MB), 193 mobile frames (7.0 MB), 19 product images, 30 horse-page images at 3 breakpoints, 16 gallery, 5 ambient. Every image responsive WebP at three breakpoints, extracted and cropped by purpose-written Python — not by hand.","source":"site/public/media/","audience":"both"},{"id":"media-in","group":"Media","label":"Source material ingested","value":"108","unit":"files, 120 MB","detail":"Four approved journey clips: J1 27.6 MB, J2 1.8 MB, J3 1.1 MB, J4 8.4 MB. Plus 5 Python processing scripts.","source":"assets-in/","audience":"both"},{"id":"media-hours","group":"Media","label":"Generation time","value":"40+","unit":"hours, minimum","detail":"Google Flow / Veo — generation, iteration, selection and approval across four chapters plus stills. The frame grid in the Flow project shows the iteration volume: dozens of takes per usable second.","source":"LOG.md","audience":"both"},{"id":"strategy","group":"Marketing","label":"Strategy pack","value":"68,300","unit":"words, complete","detail":"Channel plan 12,304 · funnel architecture 11,430 · brand system 10,934 · regulatory brief 7,414 · competitor teardown 7,176 · platform eligibility matrix 6,277 · copy audit 6,191 · evidence audit 4,549 · one-pager 2,025 · channel model (xlsx).","source":"marketing/output/2026-08-26-sonnwerk-strategy/","audience":"both"},{"id":"research","group":"Marketing","label":"Original primary research","value":"7","unit":"datasets","detail":"Verbatim competitor copy corpus with efficacy verbs flagged (11 products), price scrape, Meta Ad Library corpus, agritourism comparables, regulatory notes, competitor publishing analysis, raw sitemaps.","source":"data/","audience":"both"},{"id":"system","group":"Marketing","label":"Analysis system","value":"8 + 18","unit":"agents and skills","detail":"8 specialist agents (~4,600 words), 18 skills (~22,300 words) including an EU/Austrian claim-compliance linter in Python, 5 slash-command workflows, and a mandatory evidence gate against fabricated facts and health-claim leakage.","source":"marketing/.claude/","audience":"both"},{"id":"specs","group":"Marketing","label":"Planning documents","value":"16,169","unit":"words","detail":"Design specification, Stitch handoff, horse-page and design fix plan (4,764 words), farm/horse fix plan, proximity crop and blend plan, alternation audit and motion plan, media generation guide. Plus LOG.md — a dated, line-by-line build log of every retake, workaround and time sink.","source":"files/, LOG.md","audience":"both"}],"findings":[{"id":"annex3","title":"The regulatory picture was wrong, and is now corrected","before":"The July research treated an Annex II prohibition of CBD in cosmetics as a live existential threat.","after":"Verification on 26 August established that the Commission's actual draft (WTO notification G/TBT/N/EU/1219, Omnibus Act IX) places CBD in **Annex III — restricted, not prohibited**: max 0.19%, Δ9-THC impurity ≤ 0.00025% (2.5 ppm).","consequence":"The business is not facing a ban. It is facing a formulation and documentation requirement. The real constraint is the 2.5 ppm limit — a full-spectrum on-farm extract may not meet it without remediation. That single question now gates the product strategy.","source":"marketing/knowledge/ — regulatory verification, 26 Aug 2026","audience":"both"},{"id":"channels","title":"Two open paid channels the earlier research said did not exist","before":"The feasibility report concluded that paid acquisition was effectively closed.","after":"Taboola/Realize names **Germany** as an approved market for non-ingested hemp-derived CBD with pre-approval (< 0.2% THC). Outbrain permits hemp-based CBD where CBD is legal.","consequence":"Both carry real DACH publisher inventory. Paid is not closed — it is open and unused.","source":"realize.com/help, Outbrain policies","audience":"both"}],"roles":[{"n":1,"role":"Brand Strategist","covers":"Positioning, brand architecture, messaging house, US repositioning","rate":180,"rateLabel":"€180/h","audience":"both"},{"n":2,"role":"Market Researcher / Competitive Analyst","covers":"Competitor teardown, price scrape, Meta Ad Library corpus, keyword clusters, agritourism comparables","rate":122,"rateLabel":"€120–123/h","audience":"both"},{"n":3,"role":"Regulatory & Compliance Consultant","covers":"Novel Food, Cosmetics Regulation Annex III, health-claims law, platform ad policy, claim-free copy rules and linter","rate":128,"rateLabel":"€126–131/h","audience":"both"},{"n":4,"role":"Performance Marketing Manager","covers":"Channel plan, budget model, platform eligibility matrix, funnel architecture","rate":140,"rateLabel":"€140/h","audience":"both"},{"n":5,"role":"SEO Specialist","covers":"Keyword clusters, E-E-A-T architecture, content cadence, technical SEO scope","rate":120,"rateLabel":"€120/h","audience":"both"},{"n":6,"role":"Art Director","covers":"Visual identity, design system, colour and type tokens, photographic rules","rate":120,"rateLabel":"€120/h","audience":"both"},{"n":7,"role":"Graphic Designer","covers":"Layout, product image treatment, responsive asset system","rate":95,"rateLabel":"€95/h","audience":"both"},{"n":8,"role":"UX / Web Designer","covers":"26 pages, interaction design, information architecture","rate":120,"rateLabel":"€120/h","audience":"both"},{"n":9,"role":"Frontend Engineer","covers":"Astro build, GSAP + ScrollTrigger, canvas flipbook engine, accessibility and degradation paths","rate":100,"rateLabel":"€95–105/h","audience":"both"},{"n":10,"role":"E-commerce Developer","covers":"WooCommerce Store API, cart, checkout, CORS/nonce","rate":100,"rateLabel":"€95–105/h","audience":"both"},{"n":11,"role":"Motion / Video Producer","covers":"AI video direction and generation, four journey chapters, 40+ hours","rate":95,"rateLabel":"€60–130/h","audience":"both"},{"n":12,"role":"Media Producer / Retoucher","covers":"652 delivered responsive images, automated extraction and crop pipeline","rate":95,"rateLabel":"€95/h","audience":"both"},{"n":13,"role":"QA Engineer","covers":"4 automated audit scripts, 121 verification screenshots, contrast and motion checks","rate":95,"rateLabel":"€95/h","audience":"both"},{"n":14,"role":"DevOps","covers":"CI/CD, GitHub Pages and Netlify deployment","rate":100,"rateLabel":"€95–105/h","audience":"both"},{"n":15,"role":"Project Manager","covers":"Specifications, fix plans, build log, review cycles","rate":112,"rateLabel":"€110–115/h","audience":"both"}],"rolesNote":"These are the specialist responsibilities covered by the engagement. The table describes capability coverage; the reconstructed-hours summary below is the effort record and is not a timesheet.","scope":[{"id":"d1","package":"Discovery & design","hours":25,"hoursLabel":"25 h","proofIds":["specs","research"],"phase":"delivered","audience":"both"},{"id":"d2","package":"Website engineering","hours":110,"hoursLabel":"110 h","proofIds":["routes","loc","inserts","qa"],"phase":"delivered","audience":"both"},{"id":"d3","package":"Media production","hours":40,"hoursLabel":"40+ h","proofIds":["media-hours","media-in"],"phase":"delivered","audience":"both"},{"id":"d4","package":"Media processing","hours":25,"hoursLabel":"25 h","proofIds":["media-out","flipbook"],"phase":"delivered","audience":"both"},{"id":"d5","package":"Research & strategy","hours":60,"hoursLabel":"60 h","proofIds":["strategy","research","system"],"phase":"delivered","audience":"both"},{"id":"d6","package":"Project management & documentation","hours":20,"hoursLabel":"20 h","proofIds":["specs"],"phase":"delivered","audience":"both"},{"id":"r1","package":"WooCommerce integration — cart, prices, checkout, CORS/nonce","hours":50,"billedAs":"E-commerce Developer","cost":5250,"phase":"remaining","risk":"The CORS/nonce strategy is a documented, unbudgeted risk.","audience":"both"},{"id":"r2","package":"Ad-safe media — rebuilding the advertising set","hours":32,"billedAs":"Motion / Media Producer","cost":3040,"phase":"remaining","risk":"Without this package no paid channel has usable creative.","audience":"both"},{"id":"r3","package":"US market adaptation — positioning, naming, copy, English build","hours":50,"billedAs":"Brand Strategist","cost":7500,"phase":"remaining","risk":"Scope depends on the DTC-or-B2B decision — see open items.","audience":"both"},{"id":"r4","package":"Launch hygiene — sitemap, robots, redirects, JSON-LD, analytics, consent, newsletter, ratings removal","hours":30,"billedAs":"Web Designer / Frontend","cost":3300,"phase":"remaining","audience":"both"},{"id":"r5","package":"Final QA, performance pass, launch","hours":18,"billedAs":"QA Engineer","cost":1710,"phase":"remaining","audience":"both"}],"scopeTotals":{"delivered":{"hours":280,"hoursRange":"235 – 325","cost":33975},"remaining":{"hours":180,"hoursRange":"145 – 215","cost":20800},"total":{"hours":460,"hoursRange":"380 – 540","cost":54775}},"scopeNote":"Reconstructed from artefacts, not from a timesheet. No hours were logged during the build. Every band is derived from what is demonstrably in the repository, and is stated as a band for exactly that reason.","gaps":[{"id":"g1","title":"Commerce is not wired","detail":"The cart is an ~82-line localStorage module, not a real cart. Checkout hands off by linking to sonn-werk.at/kasse/. The WooCommerce Store API integration is unbuilt.","severity":"high","audience":"both"},{"id":"g2","title":"Prices are placeholders","detail":"Flagged placeholder: true, pending a build-time fetch from WooCommerce.","severity":"medium","audience":"both"},{"id":"g3","title":"Ratings and review counts are invented numbers","detail":"They must be removed or replaced with real data before this touches the production domain. This is non-negotiable — it is the one place the site shows unsourced social proof.","severity":"high","audience":"both"},{"id":"g4","title":"No sitemap.xml, no robots.txt, no redirect map","detail":"The intake names \"rankings hold\" as a success criterion — without a redirect map that cannot be honoured.","severity":"high","audience":"both"},{"id":"g5","title":"JSON-LD on only 3 of 11 page templates","detail":"Structured data is missing from most of the site.","severity":"medium","audience":"both"},{"id":"g6","title":"No analytics, no consent layer, no email capture","detail":"Without measurement no revenue share is verifiable and no optimisation is possible.","severity":"high","audience":"both"},{"id":"g7","title":"23 MB hero payload","detail":"A deliberate, documented trade for showcase quality — and the first thing a Lighthouse run will punish.","severity":"medium","audience":"both"},{"id":"g8","title":"Ambient and hover video loops never delivered","detail":"The markup is poster-first, so nothing breaks. Two of the four journey source clips are 720p rather than 1080p.","severity":"low","audience":"both"}],"adSafe":{"title":"The hemp problem in the media","lead":"The most commercially important open item — and it is not yet solved.","body":"The approved journey footage, particularly J2_Harvest, shows hands trimming hemp buds with scissors in close-up. As website storytelling it is excellent and on-brand. As advertising creative it is unusable.","policies":[{"platform":"Taboola / Realize","rule":"Prohibits marijuana and hemp-leaf imagery in thumbnails — explicitly, in its German, UK and US policies. Those are the three markets that matter here."},{"platform":"Meta","rule":"Rejects cannabis-plant-forward creative regardless of the product's THC content."},{"platform":"Google","rule":"Treats plant imagery as a rejection risk for US topicals under LegitScript."}],"kicker":"Ad review is pattern-matching, not law. The image reads as cannabis to a reviewer whatever the certificate says.","consequence":"The site media set and the advertising media set have to be two different sets. Every paid channel identified needs creative that does not exist yet: product-forward, farm-forward, hands and process without the bud, no leaf silhouettes.","estimate":"32 hours — regeneration, reselection, re-extraction of an ad-safe frame and still set, plus a compliance pass against each platform's imagery rules.","exhibitBad":[{"src":"galerie/ernte.webp","caption":"Harvest — bud in focus","verdict":"not ad-safe"},{"src":"galerie/haende.webp","caption":"Handwork on the plant","verdict":"not ad-safe"}],"exhibitGood":[{"src":"products/oel-11.webp","caption":"Product, cut out","verdict":"ad-safe"},{"src":"galerie/flasche.webp","caption":"Bottle in the farm context","verdict":"ad-safe"}],"audience":"both"},"mediaStrip":[{"src":"galerie/feld-morgen.webp","alt":"Field in morning light"},{"src":"galerie/pfluegen.webp","alt":"Ploughing with the horse"},{"src":"galerie/jungpflanze.webp","alt":"Young plant"},{"src":"galerie/gespann.webp","alt":"Horse team in harness"},{"src":"galerie/sense.webp","alt":"Scythe"},{"src":"galerie/extraktion.webp","alt":"Extraction"},{"src":"galerie/flasche.webp","alt":"Filled bottle"},{"src":"galerie/hof.webp","alt":"The farm"}],"flow":[{"id":"f0","n":0,"stage":"Discovery","duration":"before signing","who":"joint","items":["Confirm net online-sales figures","Agree the revenue-channel schedule","Agree the compensation base","Fix the staircase percentages","Agree the growth budget and its release","Record channel access"],"output":"The answered brief is recorded separately from the proposed commercial recommendation; only the remaining commercial variables stay open.","gates":["o9","o10","o13","o14"],"audience":"both"},{"id":"f1","n":1,"stage":"Phase 1 — build to launch","duration":"145 – 215 h","who":"Rustam","items":["WooCommerce integration (50 h)","Ad-safe media (32 h)","US adaptation (50 h)","Launch hygiene (30 h)","Final QA (18 h)"],"output":"Upfront payment, in milestones. Defined scope, written change process.","gates":["o3","o4"],"audience":"both"},{"id":"f2","n":2,"stage":"Launch","duration":"milestone-based","who":"joint","items":["Domain cutover","Redirect map live","Analytics and consent live","Ratings removed or made real"],"output":"Launch follows commerce, compliance approval and final QA. SONNWERK has named 10 November 2026 as the latest acceptable launch date, ahead of the Christmas season. The first 12-month block starts at launch.","gates":[],"audience":"both"},{"id":"f3","n":3,"stage":"Phase 2 — operation & growth","duration":"12-month blocks · 48-month horizon","who":"Rustam","items":["Platform maintenance and new features","Marketing execution across all channels","Ongoing media and creative production","Strategy and its revision","Copy and claim compliance","SEO and content architecture"],"output":"Compensation is the agreed staircase share of verified net online sales, plus separately commissioned new B2B. No monthly minimum, as SONNWERK prefers.","gates":["o6","o7"],"audience":"both"},{"id":"f4","n":4,"stage":"Review points","duration":"months 12, 24 and 36","who":"joint","items":["Verify reports against the source accounts","Review scope, results and the growth budget","Renew for a further 12 months, revise, or hand over"],"output":"Each block renews automatically unless either side gives 60 days' written notice at a review point. Termination without cause inside the first 24 months triggers the clawback.","gates":[],"audience":"both"}],"flowCosts":{"note":"Hard costs are paid by SONNWERK directly: advertising spend, AI generation credits, software subscriptions, hosting and domains, LegitScript certification, lab testing, 3PL and fulfilment, stock licensing, translation. Paid direct to the supplier or reimbursed at cost with receipts, never marked up. Any single item above €300 needs written approval in advance.","why":"Without that rule the revenue share silently funds the advertising budget out of my compensation — and the incentive inverts: I would earn more by spending less on your growth. SONNWERK has indicated a growth reserve of roughly 10–20% of monthly net revenue (answer 5E); that reserve is SONNWERK's investment and is not deducted before the share is calculated."},"openItems":[{"id":"o1","n":1,"question":"Launch timing: SONNWERK has named 10 November 2026 as the latest acceptable launch date","needs":"The Christmas season is SONNWERK's strongest period (answer 28). The remaining 145–215 hours must be scheduled against that date, and the launch gates must still close.","owner":"joint","ownerLabel":"joint","blocks":"Schedule","why":"A dated launch is now a constraint, not an open question. It sets the schedule for the remaining build.","status":"answered","critical":false,"audience":"both"},{"id":"o2","n":2,"question":"Platform: the existing WooCommerce shop remains the commerce backend","needs":"Read-only access only after the appropriate agreement; no replatforming assumption.","owner":"client","ownerLabel":"SONNWERK","blocks":"Commerce integration","why":"The remaining work is integration with the existing operating platform.","status":"answered","critical":false,"audience":"both"},{"id":"o3","n":3,"question":"Approval process: Johannes and Thomas give final written approval for public copy, product claims and launch","needs":"Stated turnaround is about one week, and within hours for urgent matters (answer 25). Record both in the term sheet.","owner":"client","ownerLabel":"SONNWERK","blocks":"Final approval","why":"Rustam prepares the work; SONNWERK retains the final business and product approval.","status":"answered","critical":false,"audience":"both"},{"id":"o4","n":4,"question":"Operating cadence: at least twice weekly, ideally a short daily exchange in the afternoon","needs":"SONNWERK owns fulfilment, production, product presentation and invoicing; Rustam owns online marketing and sales (answers 23, 26).","owner":"client","ownerLabel":"SONNWERK","blocks":"Operating cadence","why":"A near-daily cadence is real recurring effort and belongs in the scope, not in the goodwill.","status":"answered","critical":false,"audience":"both"},{"id":"o5","n":5,"question":"Target markets: launch scope is Austria/DACH first; the US remains a separate evaluation route","needs":"Choose a specific US route only if the evaluation proceeds.","owner":"joint","ownerLabel":"joint","blocks":"Market adaptation","why":"The US is an opportunity to assess, not an assumed launch market.","status":"answered","critical":false,"audience":"both"},{"id":"o6","n":6,"question":"US openness: SONNWERK is open to evaluating partners, logistics, certification and differentiated positioning","needs":"No partner or investment commitment is implied at this stage.","owner":"client","ownerLabel":"SONNWERK","blocks":"US route","why":"Openness to evaluation is distinct from choosing or funding a route.","status":"answered","critical":false,"audience":"both"},{"id":"o7","n":7,"question":"Compliance review: claims require SONNWERK and qualified-advisor sign-off before launch","needs":"Record the reviewer and evidence required for each affected claim.","owner":"client","ownerLabel":"SONNWERK","blocks":"Product and claim release","why":"The project supplies research and compliant draft language, but does not replace the approving authority.","status":"answered","critical":false,"audience":"both"},{"id":"o8","n":8,"question":"Record the pre-launch online baseline for the record, not as a carve-out","needs":"Verified monthly net online sales for the agreed digital channels for the twelve months before launch.","owner":"client","ownerLabel":"SONNWERK","blocks":"Measurement record","why":"SONNWERK asked that its existing online business be reflected in the upfront payment rather than carved out of the share (answer 30). That is accepted: the share applies to all agreed net online sales, and the existing base is one of the reasons the upfront is €18,000 rather than €25,000. The baseline is still written down, so both sides can measure what the partnership actually added.","status":"answered","critical":false,"audience":"both"},{"id":"o9","n":9,"question":"Set the exact staircase percentages","needs":"A written percentage per band after the verified online-sales and margin review. The proposal is 18 / 14 / 10 / 7.","owner":"joint","ownerLabel":"joint","blocks":"Final offer","why":"The calculator percentages are negotiation proposals, not an accepted commercial term.","status":"open","critical":true,"audience":"both"},{"id":"o10","n":10,"question":"Confirm the revenue-channel schedule and reporting entities","needs":"WooCommerce, payment providers, marketplaces and any other agreed online channel or receiving entity.","owner":"client","ownerLabel":"SONNWERK","blocks":"Verification schedule","why":"A channel or entity omitted from the schedule can make an otherwise clear share unverifiable.","status":"open","critical":true,"audience":"both"},{"id":"o11","n":11,"question":"Verification requirement: read-only access, monthly statements and accountant-check right","needs":"Contract wording plus access after the appropriate agreement.","owner":"joint","ownerLabel":"joint","blocks":"Signing","why":"The agreed principle must cover WooCommerce, payment and marketplace accounts, reporting mismatches and channel shifting.","status":"answered","critical":false,"audience":"both"},{"id":"o12","n":12,"question":"B2B treatment: existing customers excluded; new Rustam-introduced accounts use a separate written commission","needs":"Freeze the existing-customer list and define registration, rate, duration and repeat orders.","owner":"joint","ownerLabel":"joint","blocks":"B2B commission schedule","why":"This keeps existing B2B revenue outside the online-sales share while preserving a verifiable rule for genuinely new business.","status":"answered","critical":false,"audience":"both"},{"id":"o13","n":13,"question":"Agree the growth budget, its size and how it is released","needs":"SONNWERK has stated that customs-related regulatory costs make maintaining a financial reserve the current priority, and that any growth budget must be deployed where there is a clear potential return (answer 5F).","owner":"client","ownerLabel":"SONNWERK","blocks":"The entire revenue case","why":"The share is paid out of revenue that acquisition spend produces. A partnership priced on growth with an unfunded acquisition budget is a share of nothing. This is the single most important commercial dependency in the document.","status":"open","critical":true,"audience":"both"},{"id":"o14","n":14,"question":"Agree the compensation base: digital consumer sales, plus separately commissioned new B2B and new-market revenue","needs":"A written channel schedule and a per-account commission rule for genuinely new B2B, white-label and new-market business introduced by Rustam.","owner":"joint","ownerLabel":"joint","blocks":"Final offer","why":"Online is currently 10–24% of consumer revenue and roughly €20,000 a year. A share of that channel alone cannot carry four years of full-time operation, whatever the percentage. SONNWERK's own answer to question 3 states that the objective is total sales, not one channel.","status":"open","critical":true,"audience":"both"},{"id":"o15","n":15,"question":"Scope boundary for Phase 2","needs":"A written cap on ongoing execution hours per month, with a stated rate above it.","owner":"joint","ownerLabel":"joint","blocks":"Signing","why":"\"Anything required to increase sales\" is unbounded as written. Bounded scope protects SONNWERK from surprise invoices and protects Rustam from unlimited work against a share that may not arrive.","status":"open","critical":false,"audience":"both"}],"openItemsNote":"Do not finalise the offer before items 9, 10, 13 and 14 are written. Item 13 — the funded growth budget — decides whether the revenue share can pay at all.","clauses":[{"id":"c1","name":"Defined scope","summary":"What is in, what is out, and what anything extra costs.","detail":"A written change process, a stated price for out-of-scope work, and a monthly execution-hours cap for Phase 2. \"Anything required to increase sales\" is unbounded as written and must be bounded in the contract.","why":"Otherwise it is unlimited work for a percentage that may never arrive.","state":"proposed","audience":"both"},{"id":"c2","name":"Baseline fixed in writing","summary":"Pre-launch online sales fixed in writing before work starts — as a measurement record, not a carve-out.","detail":"The share applies to all agreed net online sales, as SONNWERK prefers. The twelve-month pre-launch baseline is still recorded so that both sides can see what the partnership added, and so no baseline is ever negotiated after results are known.","why":"It protects SONNWERK's existing online revenue and prevents a baseline from being negotiated after results are known.","state":"proposed","audience":"both"},{"id":"c3","name":"Net online sales defined","summary":"Cash actually received through the agreed digital channels, after the listed exclusions.","detail":"Channels include the SONNWERK online shop, Instagram-connected journeys, marketplaces and any other agreed online channel. Exclude VAT, refunds, chargebacks, shipping collected from customers, payment-provider fees and marketplace fees. Do not use undefined income or profit.","why":"Net online sales are within the partnership's scope and can be verified; profit changes with costs and expenses Rustam does not control.","state":"proposed","audience":"both"},{"id":"c4","name":"No monthly minimum","summary":"No monthly minimum. In a month with no sales, SONNWERK pays nothing.","detail":"SONNWERK declined a minimum monthly payment credited against the share (answer 35). That is accepted. The negotiation therefore turns entirely on the staircase percentages, the compensation base and the term.","why":"Against a €3,500-a-month agency retainer this is the single largest concession in the deal, and it is worth naming as one.","state":"accepted","audience":"both"},{"id":"c14","name":"Term and renewal","summary":"12-month initial block, renewing automatically in 12-month blocks to a 48-month horizon.","detail":"Either side may end the partnership by giving 60 days' written notice before a review point at month 12, 24 or 36. Revenue participation ends with the term unless both sides agree otherwise, as SONNWERK asked (answer 38). There is no indefinite commitment on either side.","why":"SONNWERK asked for a 12-month initial term and no open-ended obligation; the €231,000 comparison and the deferred build cost are both four-year figures. Renewing blocks give SONNWERK the exit it asked for and give the deferred value a runway to be recovered.","state":"proposed","audience":"both"},{"id":"c5","name":"Data access and accountant-check right","summary":"Read-only access to WooCommerce, payment and marketplace accounts, plus monthly reporting.","detail":"The agreement must prohibit moving sales to another channel or entity to avoid the share and allow an independent accountant check if statements do not match the underlying accounts.","why":"A percentage that cannot be reconciled to the source accounts is not verifiable compensation.","state":"proposed","audience":"both"},{"id":"c6","name":"Cost approval threshold","summary":"Anything above €300 needs written approval in advance. Nothing is marked up.","detail":"Hard costs are paid by the client directly to the supplier, or reimbursed at cost against receipts.","why":"Without this rule the share silently funds your advertising budget out of my compensation, and the incentive inverts.","state":"proposed","audience":"both"},{"id":"c13","name":"Funded growth budget","summary":"An agreed acquisition budget, its size and the conditions for releasing it.","detail":"SONNWERK has stated that customs-related regulatory costs make holding a financial reserve the current priority, and that any growth budget must be deployed where there is a clear potential return (answer 5F). A written budget, a release rule and a review cadence belong in the term sheet.","why":"The share is paid out of revenue that acquisition spend produces. Without a funded budget the growth case is a forecast with no engine behind it, and the risk sits entirely on the side that is paid last.","state":"proposed","audience":"both"},{"id":"c7","name":"IP position","summary":"SONNWERK owns its brand, content, customer data and materials outright, and receives permanent unrestricted rights to everything built for the shop.","detail":"Matching SONNWERK's stated position (answer 37): full and permanent usage rights to the code, design and assets created for the shop, including the right to modify, further develop or move the site to another provider. Pre-existing frameworks, tools and reusable components remain Rustam's intellectual property, licensed permanently and irrevocably for use in the SONNWERK site. The shop is never technically or legally dependent on the partnership continuing.","why":"SONNWERK asked for exactly this and it is reasonable. The protection therefore moves out of the IP clause and into the clawback: the deferred value is secured by a payment obligation on early termination, not by holding the website hostage.","state":"accepted","audience":"both"},{"id":"c8","name":"Clawback","summary":"Terminate without cause inside the first 24 months and the deferred build value becomes due.","detail":"The agency comparison for Phase 1 is €63,000; €18,000 is paid upfront. On termination without cause before month 24, the difference less any share already received becomes due in equal monthly instalments over the following six months. From month 25 the obligation falls away entirely. The same applies if the system is deliberately taken out of use.","why":"Since SONNWERK keeps full and permanent rights to everything built, the clawback is the only thing standing between a four-year partnership and €45,000 of delivered work given away with a notice period. It costs SONNWERK nothing if the partnership runs.","state":"proposed","audience":"both"},{"id":"c9","name":"B2B excluded and separately commissioned","summary":"Existing B2B customers remain excluded from the online-sales share.","detail":"New B2B customers, white-label accounts and new-market business introduced and materially developed by Rustam require a separate written commission covering registration, rate, duration and repeat orders — negotiated per account, as SONNWERK proposed (answer 34), and capable of running beyond the end of the cooperation where agreed.","why":"This protects SONNWERK's existing B2B book while keeping genuinely new B2B growth measurable.","state":"proposed","audience":"both"},{"id":"c10","name":"Change of control","summary":"If the company or the relevant branch is sold, what happens is defined in advance.","detail":"Either a buyout multiple or the share transferring to the acquirer.","why":"Without this clause an exit ends the deal at zero.","state":"proposed","audience":"both"},{"id":"c11","name":"Currency and FX","summary":"Revenue may arrive in USD; invoices are issued in EUR.","detail":"The conversion basis and who carries the FX risk are both named.","why":"A small question with real money attached over three years.","state":"proposed","audience":"both"},{"id":"c12","name":"Regulatory sign-off","summary":"Approval of product and health claims sits with SONNWERK and its regulatory advisor.","detail":"I produce claim-compliant copy to the documented rules. I am not the approving authority.","why":"This belongs in writing, in both sides' interest.","state":"proposed","audience":"both"}],"clauseStates":[{"id":"open","label":"open","meaning":"Not yet discussed"},{"id":"proposed","label":"proposed","meaning":"On the table, awaiting a response"},{"id":"countered","label":"countered","meaning":"SONNWERK proposes different terms — a note is required"},{"id":"accepted","label":"agreed","meaning":"Accepted by both sides"},{"id":"blocked","label":"blocked","meaning":"Cannot proceed until an open item is resolved"}],"nextSteps":[{"n":1,"step":"Mutual confidentiality agreement","detail":"Mutual, never one-way. No hidden non-compete, no hidden IP assignment. Austrian law.","owner":"both"},{"n":2,"step":"Verify the online-sales base","detail":"Channel-by-channel net online sales for the last twelve months, so the reporting schedule and the pre-launch record can be written.","owner":"SONNWERK"},{"n":3,"step":"Agree the compensation base","detail":"Digital consumer sales as the share base, plus a separate per-account commission rule for new B2B, white-label and new-market revenue.","owner":"joint"},{"n":4,"step":"Agree the growth budget","detail":"Size, release conditions and review cadence. Without this the revenue case has no engine.","owner":"SONNWERK"},{"n":5,"step":"Set the staircase and confirm the term","detail":"€18,000 upfront, 18 / 14 / 10 / 7, 12-month renewing blocks to a 48-month horizon, clawback before month 24.","owner":"joint"},{"n":6,"step":"Term sheet to an Austrian lawyer","detail":"€1,000 – 2,000 against a four-year revenue share is cheap insurance.","owner":"both"}],"quote":"What you are buying here replaces fifteen roles and costs roughly €231,000 over four years as agency work. I will do it for €18,000 plus a share of revenue. The difference is not a discount — I am deferring it and recovering it through the share, because I believe you will grow. If you don't grow, I have lost, not you.","revenueBase":{"title":"What the share is calculated on","stated":"SONNWERK reported more than €15,000 of online-shop revenue in 2025 and expects more than €20,000 in 2026 (answer 30). Online is 10–24% of consumer-product revenue (answer 5D).","included":["Net sales received through the SONNWERK online shop","Instagram-connected and other social commerce journeys","Marketplaces and any further online channel agreed in writing","Consumer sales through new digital channels opened during the partnership"],"separate":"New B2B accounts and new-market or white-label revenue introduced and materially developed by Rustam carry a separate written commission per account (answer 34), not the online-sales share.","excluded":"VAT, refunds, chargebacks, shipping collected from customers, payment-provider fees, marketplace fees. Existing B2B customers are excluded entirely.","why":"SONNWERK's own answer to question 3 states the objective plainly: \"the priority is not whether growth comes through B2B or B2C, or whether products are sold under the SONNWERK brand or as white-label products. The main objective is to increase the sales of the products and capabilities we have built.\" The compensation base is written to match that objective rather than a single channel.","audience":"both"}};
+/* SONNWERK proposal calculator. It contains no UI or browser dependencies. */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  if (root) root.SonnwerkDealModel = api;
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  var BASE_UPFRONT = 18000;
+  var UPFRONT_REDUCTION = 8000;
+  var BASE_RATES = [0.18, 0.14, 0.10, 0.07];
+  var BAND_EDGES = [100000, 250000, 600000];
+  var MAX_METER = 100;
+
+  function numberOrError(value, name) {
+    var number = typeof value === 'string' && value.trim() === '' ? NaN : Number(value);
+    if (!Number.isFinite(number) || number < 0) {
+      throw new RangeError(name + ' must be a non-negative number.');
+    }
+    return number;
+  }
+
+  function meterOrError(value) {
+    var meter = numberOrError(value, 'The slider position');
+    if (meter > MAX_METER) {
+      throw new RangeError('The slider position must be between 0 and 100.');
+    }
+    return meter;
+  }
+
+  function tieredShare(revenue, rates) {
+    var sales = numberOrError(revenue, 'The annual revenue');
+    var activeRates = rates || BASE_RATES;
+    var first = Math.min(sales, BAND_EDGES[0]);
+    var second = Math.max(0, Math.min(sales - BAND_EDGES[0], BAND_EDGES[1] - BAND_EDGES[0]));
+    var third = Math.max(0, Math.min(sales - BAND_EDGES[1], BAND_EDGES[2] - BAND_EDGES[1]));
+    var fourth = Math.max(0, sales - BAND_EDGES[2]);
+    return first * activeRates[0] + second * activeRates[1] + third * activeRates[2] + fourth * activeRates[3];
+  }
+
+  function termsForMeter(value) {
+    var meter = meterOrError(value);
+    var t = meter / MAX_METER;
+    var multiplier = 1 + (UPFRONT_REDUCTION * t / 12000);
+    return {
+      meter: meter,
+      t: t,
+      upfront: BASE_UPFRONT - UPFRONT_REDUCTION * t,
+      rateMultiplier: multiplier,
+      rates: BASE_RATES.map(function (rate) { return rate * multiplier; })
+    };
+  }
+
+  function evaluate(annualSales, meter) {
+    if (!Array.isArray(annualSales) || annualSales.length !== 4) {
+      throw new TypeError('Please provide four annual revenues.');
+    }
+    var selected = termsForMeter(meter);
+    var sales = annualSales.map(function (value, index) {
+      return numberOrError(value, 'Annual revenue ' + (index + 1));
+    });
+    var baselineShares = sales.map(function (value) { return tieredShare(value, BASE_RATES); });
+    var selectedShares = sales.map(function (value) { return tieredShare(value, selected.rates); });
+    var baselineCumulative = [];
+    var selectedCumulative = [];
+    var baselineRunning = BASE_UPFRONT;
+    var selectedRunning = selected.upfront;
+    sales.forEach(function (_, index) {
+      baselineRunning += baselineShares[index];
+      selectedRunning += selectedShares[index];
+      baselineCumulative.push(baselineRunning);
+      selectedCumulative.push(selectedRunning);
+    });
+    return {
+      baseline: { upfront: BASE_UPFRONT, rates: BASE_RATES.slice(), shares: baselineShares, total: baselineRunning },
+      selected: { upfront: selected.upfront, rates: selected.rates, shares: selectedShares, total: selectedRunning },
+      sales: sales,
+      terms: selected,
+      difference: selectedRunning - baselineRunning,
+      cumulative: { baseline: baselineCumulative, selected: selectedCumulative }
+    };
+  }
+
+  function scenario(salesEachYear, meter) {
+    var annual = numberOrError(salesEachYear, 'The annual revenue');
+    return evaluate([annual, annual, annual, annual], meter);
+  }
+
+  return {
+    BASE_UPFRONT: BASE_UPFRONT,
+    BASE_RATES: BASE_RATES.slice(),
+    BAND_EDGES: BAND_EDGES.slice(),
+    tieredShare: tieredShare,
+    termsForMeter: termsForMeter,
+    evaluate: evaluate,
+    scenario: scenario
+  };
+}));
+
+
+/* Shared UI for the SONNWERK proposal slider. Used by the landing page and the Control Room.
+   Every element lookup is scoped to the root passed to init(), so one page can host it anywhere. */
+(function (global) {
+  'use strict';
+
+  var money = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  var number = new Intl.NumberFormat('en-IE', { maximumFractionDigits: 0 });
+
+  function formatMoney(value) { return money.format(value); }
+  function formatRate(rate) {
+    var value = rate * 100;
+    return (Math.round(value * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }) + '%';
+  }
+  function selectionText(meter) {
+    if (meter === 0) return 'Base rate';
+    if (meter === 100) return 'Maximum revenue share';
+    return 'Your selection';
+  }
+  function points(values, minimum, maximum) {
+    var left = 48, right = 616, top = 24, bottom = 236;
+    var range = Math.max(1, maximum - minimum);
+    return values.map(function (value, index) {
+      var x = left + ((right - left) * index / (values.length - 1));
+      var y = bottom - ((value - minimum) / range * (bottom - top));
+      return (index ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+    }).join(' ');
+  }
+
+  function init(root, model) {
+    model = model || global.SonnwerkDealModel;
+    if (!root || !model) return;
+    function q(selector) { return root.querySelector(selector); }
+    function setText(selector, value) { var element = q(selector); if (element) element.textContent = value; }
+
+    var meter = q('[data-deal-meter]') || q('#deal-meter');
+    var inputs = Array.prototype.slice.call(root.querySelectorAll('[data-sales-input]'));
+    if (!meter || inputs.length !== 4) return;
+    var error = q('[data-form-error]');
+    var scenarios = [0, 10000, 20000, 50000, 100000, 250000, 700000];
+    var tierBody = q('[data-tier-body]');
+    var scenarioBody = q('[data-scenario-body]');
+    var basePath = q('[data-chart-base]');
+    var selectedPath = q('[data-chart-selected]');
+    var salesOutputs = Array.prototype.slice.call(root.querySelectorAll('[data-sales-dependent]'));
+    var chartValues = q('[data-chart-values]');
+
+    function readSales() {
+      var values = [];
+      var invalid = [];
+      inputs.forEach(function (input, index) {
+        var raw = input.value.trim();
+        var value = raw === '' ? NaN : Number(raw.replace(',', '.'));
+        if (!Number.isFinite(value) || value < 0) invalid.push(index); else values.push(value);
+      });
+      if (invalid.length) {
+        var issue = new RangeError('Please enter a non-negative revenue for ' + invalid.map(function (index) { return 'Year ' + (index + 1); }).join(', ') + '.');
+        issue.invalid = invalid;
+        throw issue;
+      }
+      return values;
+    }
+    function renderTiers(terms) {
+      Array.prototype.slice.call(tierBody.rows).forEach(function (row, index) {
+        row.cells[1].textContent = formatRate(model.BASE_RATES[index]);
+        row.cells[2].textContent = formatRate(terms.rates[index]);
+      });
+    }
+    function renderScenarios(value) {
+      scenarioBody.replaceChildren();
+      scenarios.forEach(function (sales) {
+        var result = model.scenario(sales, value);
+        var row = document.createElement('tr');
+        [number.format(sales), formatMoney(result.baseline.total), formatMoney(result.selected.total), formatMoney(result.difference)].forEach(function (text) {
+          var cell = document.createElement('td'); cell.textContent = text; row.appendChild(cell);
+        });
+        scenarioBody.appendChild(row);
+      });
+    }
+    function renderChart(result, meterValue) {
+      var baselineValues = [result.baseline.upfront].concat(result.cumulative.baseline);
+      var selectedValues = [result.selected.upfront].concat(result.cumulative.selected);
+      var all = baselineValues.concat(selectedValues);
+      var low = Math.min.apply(null, all);
+      var high = Math.max.apply(null, all);
+      basePath.setAttribute('d', points(baselineValues, low, high));
+      selectedPath.setAttribute('d', points(selectedValues, low, high));
+      setText('[data-chart-y-top]', formatMoney(high));
+      setText('[data-chart-y-mid]', formatMoney((high + low) / 2));
+      setText('[data-chart-y-bottom]', formatMoney(low));
+      // At the base position both lines are the same line: label it once.
+      var same = meterValue === 0;
+      setText('[data-chart-series-base]', 'Base rate');
+      setText('[data-chart-series-selected]', same ? '' : selectionText(meterValue));
+      var comparison = result.difference === 0 ? 'the same as the base rate' : result.difference > 0 ? formatMoney(result.difference) + ' higher than the base rate' : formatMoney(Math.abs(result.difference)) + ' lower than the base rate';
+      setText('[data-comparison-summary]', same ? 'Base rate: after four years SONNWERK has paid ' + formatMoney(result.baseline.total) + ' in total.' : selectionText(meterValue) + ': after four years the total is ' + comparison + '.');
+      if (chartValues) {
+        chartValues.replaceChildren();
+        function describe(label, values) {
+          return label + ': start ' + formatMoney(values[0]) + '; ' + values.slice(1).map(function (value, index) { return 'after year ' + (index + 1) + ' ' + formatMoney(value); }).join('; ') + '.';
+        }
+        [describe('Base rate', baselineValues), same ? 'Your selection: identical to the base rate.' : describe(selectionText(meterValue), selectedValues)].forEach(function (text) {
+          var item = document.createElement('li');
+          item.textContent = text;
+          chartValues.appendChild(item);
+        });
+      }
+    }
+    function update() {
+      var meterValue = Number(meter.value);
+      var terms = model.termsForMeter(meterValue);
+      meter.setAttribute('aria-valuetext', 'One-time payment ' + formatMoney(terms.upfront) + '; share on the first one hundred thousand euros ' + formatRate(terms.rates[0]) + '.');
+      setText('[data-upfront]', formatMoney(terms.upfront));
+      setText('[data-first-rate]', formatRate(terms.rates[0]));
+      renderTiers(terms);
+      renderScenarios(meterValue);
+      var sales;
+      try { sales = readSales(); }
+      catch (exception) {
+        inputs.forEach(function (input, index) { if (exception.invalid.indexOf(index) >= 0) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); });
+        error.hidden = false;
+        error.textContent = exception.message + ' The four-year total and the chart are hidden until the inputs are valid.';
+        salesOutputs.forEach(function (output) { output.hidden = true; });
+        return;
+      }
+      inputs.forEach(function (input) { input.removeAttribute('aria-invalid'); });
+      error.hidden = true;
+      error.textContent = '';
+      var result = model.evaluate(sales, meterValue);
+      setText('[data-selected-total]', formatMoney(result.selected.total));
+      salesOutputs.forEach(function (output) { output.hidden = false; });
+      renderChart(result, meterValue);
+    }
+    meter.addEventListener('input', update);
+    inputs.forEach(function (input) { input.addEventListener('input', update); input.addEventListener('change', update); });
+    update();
+  }
+
+  global.SonnwerkDealCalculator = { init: init };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
 (function () {
   'use strict';
 
@@ -2993,7 +2518,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
 })();
 
 
-(function(){'use strict';APP.register('deal',{mount:function(){}});})();
+(function(){'use strict';APP.register('deal',{mount:function(panel){if(window.SonnwerkDealCalculator)window.SonnwerkDealCalculator.init(panel,window.SonnwerkDealModel);}});})();
 
 
 (function () {
@@ -4140,753 +3665,6 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
       this.update = function () { if (!panel.hidden) draw(); };
     },
     update: function () { /* replaced in mount once the root element is known */ }
-  });
-})();
-
-
-/* ---- Tab 04 · Der Deal --------------------------------------------------
-   One slider. Everything else derives from it, and every figure has a twin on
-   the other side of the table.
-
-   Update path: one derive() per state change, then a flat list of writes into
-   nodes cached at mount. No table is ever rebuilt on a drag — mount() creates
-   every row that can ever exist and update() only writes text into them.
-   ----------------------------------------------------------------------- */
-(function () {
-  'use strict';
-
-  var LEGACY_APP = window.LEGACY_APP;
-  if (!LEGACY_APP) return;
-  var DEAL = window.LEGACY_DEAL || {};
-  var C = DEAL.constants || {};
-
-  var SL = DEAL.slider || { min: 18000, max: 35000, step: 500, default: 25000 };
-  var EDGES = (DEAL.revenueBands && DEAL.revenueBands.length ? DEAL.revenueBands : [150000, 400000, 1000000]);
-  var BLAB = DEAL.bandLabels || [];
-  var INST = (DEAL.instalments && DEAL.instalments.length ? DEAL.instalments : [{ n: 1, label: '1 Rate', hint: '' }]);
-  var SCEN = (DEAL.scenarios && DEAL.scenarios.length ? DEAL.scenarios : [250000]);
-  var NBANDS = EDGES.length + 1;
-
-  var DISCOUNT = C.einmalDiscount || 0;
-  var BUYOUT = C.agencyBuyout || 0;
-  var AGTOTAL = C.agencyTotal || 0;
-  var RETAINER = (C.retainerMonthly || 0) * 12;
-  var GM = C.grossMarginPct || 0.7;
-  var LIM_MARGIN = C.marginGuardrail || 0.4;
-  var LIM_SHARE = C.maxRevenueShare || 0.15;
-
-  /* anchors, ascending by upfront — C, B, A */
-  var ANCH = (DEAL.anchors || []).slice().sort(function (a, b) { return a.upfront - b.upfront; });
-
-  var F = LEGACY_APP.fmt, A = LEGACY_APP.esc, Q = LEGACY_APP.q, QA = LEGACY_APP.qa;
-  var R = {};                 // cached nodes
-  var lastKey = null;         // guards the whole update path
-  var drawn = false;
-
-  /* ------------------------------------------------------------- helpers -- */
-
-  function n50(v) { return Math.round(v / 50) * 50; }
-  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
-
-  function signed(v) {
-    if (Math.round(v) === 0) return '0 €';
-    return (v > 0 ? '+' : '−') + F.eur(Math.abs(v));
-  }
-
-  /* -------------------------------------------------------- interpolation -- */
-  /* Linear between the two bracketing anchors on every field. Term rounds to a
-     whole month, the minimum to 50 €. Below the lowest anchor the values clamp
-     to it — no extrapolation into a model nobody stands behind. */
-
-  function interp(up) {
-    if (!ANCH.length) return { bands: [10, 7, 5, 4], term: 12, min: 0, id: null, between: null };
-    var lo = ANCH[0], hi = null, i;
-    if (up <= ANCH[0].upfront) {
-      return shape(ANCH[0], ANCH[0], 0);
-    }
-    for (i = 1; i < ANCH.length; i++) {
-      if (up <= ANCH[i].upfront) { lo = ANCH[i - 1]; hi = ANCH[i]; break; }
-    }
-    if (!hi) return shape(ANCH[ANCH.length - 1], ANCH[ANCH.length - 1], 0);
-    var span = hi.upfront - lo.upfront;
-    return shape(lo, hi, span ? (up - lo.upfront) / span : 0);
-  }
-
-  function shape(lo, hi, t) {
-    var bands = [], i;
-    for (i = 0; i < NBANDS; i++) {
-      var a = (lo.bands && lo.bands[i] != null) ? lo.bands[i] : 0;
-      var b = (hi.bands && hi.bands[i] != null) ? hi.bands[i] : a;
-      bands.push(Math.round((a + (b - a) * t) * 10) / 10);
-    }
-    return {
-      bands: bands,
-      term: Math.round(lo.term + (hi.term - lo.term) * t),
-      min: n50(lo.min + (hi.min - lo.min) * t),
-      lo: lo, hi: hi, t: t,
-      id: (t <= 0.0001) ? lo.id : (t >= 0.9999 ? hi.id : null)
-    };
-  }
-
-  /* ------------------------------------------------------------ staircase -- */
-  /* Revenue falling in each band is charged at that band's rate — never the whole
-     revenue at the headline rate. A flat percentage punishes growth; this does the
-     opposite. */
-
-  function slices(rev) {
-    var out = [], prev = 0, i;
-    for (i = 0; i < NBANDS; i++) {
-      var top = (i < EDGES.length) ? EDGES[i] : Infinity;
-      out.push(Math.max(0, Math.min(rev, top) - prev));
-      prev = top;
-    }
-    return out;
-  }
-
-  function annualShare(rev, bands) {
-    var s = slices(rev), sum = 0, i;
-    for (i = 0; i < NBANDS; i++) sum += s[i] * (bands[i] || 0) / 100;
-    return sum;
-  }
-
-  /* -------------------------------------------------------------- derive -- */
-
-  function derive(up, inst, rev) {
-    var cfg = interp(up);
-    var bands = cfg.bands, term = cfg.term, minM = cfg.min;
-
-    var payNow = (inst === 1) ? up - DISCOUNT : up;
-    var per = inst > 0 ? payNow / inst : payNow;
-
-    var share = annualShare(rev, bands);
-
-    /* client side */
-    var clientYear = Math.max(share, minM * 12);
-    var clientPct = rev > 0 ? clientYear / rev : 0;
-    var clientVsRet = clientYear - RETAINER;
-    var clientTerm = up + clientYear * term / 12;
-    var gross = rev * GM;
-    var ofMargin = gross > 0 ? clientYear / gross : (clientYear > 0 ? Infinity : 0);
-
-    /* my side */
-    var termEarn = Math.max(share * term / 12, minM * term);
-    var total = up + termEarn;
-    var guaranteed = up + minM * term;
-
-    return {
-      up: up, inst: inst, rev: rev,
-      bands: bands, term: term, min: minM, cfg: cfg,
-      payNow: payNow, per: per,
-      share: share,
-      clientYear: clientYear, clientPct: clientPct, clientVsRet: clientVsRet,
-      clientTerm: clientTerm, gross: gross, ofMargin: ofMargin,
-      termEarn: termEarn, total: total, guaranteed: guaranteed,
-      crossover: solve(function (r) { return up + Math.max(annualShare(r, bands) * term / 12, minM * term); }, BUYOUT),
-      breakeven: solve(function (r) { return Math.max(annualShare(r, bands), minM * 12); }, RETAINER),
-      overMargin: ofMargin > LIM_MARGIN,
-      overShare: (bands[0] || 0) / 100 > LIM_SHARE
-    };
-  }
-
-  /* monotone bisection — 40 passes over a 4-term sum is far cheaper than a frame */
-  function solve(fn, target) {
-    if (fn(0) >= target) return 0;
-    var hi = 100000;
-    while (fn(hi) < target && hi < 1e9) hi *= 2;
-    if (hi >= 1e9) return null;
-    var lo = 0, i, m;
-    for (i = 0; i < 40; i++) { m = (lo + hi) / 2; if (fn(m) < target) lo = m; else hi = m; }
-    return Math.round((lo + hi) / 2 / 100) * 100;
-  }
-
-  /* --------------------------------------------------------- chart scales -- */
-
-  var CX0 = 76, CX1 = 624, CY0 = 24, CY1 = 334;
-  var LADDER = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
-
-  function niceStep(v) {
-    if (!(v > 0)) return 1;
-    var e = Math.pow(10, Math.floor(Math.log(v) / Math.LN10));
-    var m = v / e, i;
-    for (i = 0; i < LADDER.length; i++) if (m <= LADDER[i] + 1e-9) return LADDER[i] * e;
-    return 10 * e;
-  }
-
-  /* ---------------------------------------------------------------- mount -- */
-
-  function mount(root) {
-    if (!root) return;
-
-    /* --- rebuild the parts that are data-shaped, once ---------------------- */
-
-    /* slider */
-    var sl = Q('#t4-slider', root);
-    if (sl) {
-      sl.min = SL.min; sl.max = SL.max; sl.step = SL.step;
-    }
-    var rangeEl = Q('#t4-cfg-range', root);
-    if (rangeEl) rangeEl.textContent = F.eur(SL.min) + ' – ' + F.eur(SL.max);
-
-    /* anchor ticks */
-    var ticks = Q('#t4-ticks', root);
-    if (ticks && ANCH.length) {
-      var span = (SL.max - SL.min) || 1;
-      ticks.innerHTML = ANCH.map(function (a) {
-        var pos = clamp((a.upfront - SL.min) / span, 0, 1) * 100;
-        return '<button type="button" class="t4-tick' + (a.recommended ? ' t4-tick--rec' : '') +
-          '" data-upfront="' + A(a.upfront) + '" style="left:' + pos.toFixed(2) + '%">' +
-          '<span class="t4-tick__m" aria-hidden="true"></span>' +
-          '<span class="t4-tick__l"><b>' + A(a.id) + '</b> <span class="num">' + A(F.eur(a.upfront)) + '</span></span>' +
-          '<span class="vh">Auf Modell ' + A(a.id) + ' springen, ' + A(F.num(a.upfront)) + ' Euro' +
-          (a.recommended ? ', Empfehlung' : '') + '</span></button>';
-      }).join('');
-    }
-    R.ticks = QA('.t4-tick', root);
-
-    /* instalment segments */
-    var seg = Q('#t4-seg', root);
-    if (seg) {
-      seg.innerHTML = INST.map(function (o) {
-        return '<button type="button" class="seg__b" data-n="' + A(o.n) + '" aria-pressed="false">' +
-          A(o.label) + '</button>';
-      }).join('');
-    }
-    R.segs = QA('#t4-seg .seg__b', root);
-
-    /* scenario buttons */
-    var scen = Q('#t4-scen', root);
-    if (scen) {
-      scen.innerHTML = SCEN.map(function (v) {
-        return '<button type="button" class="t4-scen__b" data-rev="' + A(v) + '" aria-pressed="false">' +
-          '<span class="num">' + A(F.eurK(v)) + '</span></button>';
-      }).join('');
-    }
-    R.scens = QA('.t4-scen__b', root);
-
-    /* payment schedule — every row that can ever exist, built once */
-    var maxN = INST.reduce(function (m, o) { return Math.max(m, o.n); }, 1);
-    var pbody = Q('#t4-pay-body', root);
-    if (pbody) {
-      var rows = '', i;
-      for (i = 0; i < maxN; i++) {
-        rows += '<tr><th scope="row">' + (i === 0 ? 'bei Unterzeichnung' : '+' + (i * 30) + ' Tage') +
-          '</th><td class="num"></td><td class="wrap dim"></td></tr>';
-      }
-      rows += '<tr class="is-total"><th scope="row">Summe</th><td class="num"></td><td class="wrap dim"></td></tr>';
-      pbody.innerHTML = rows;
-    }
-    R.payRows = QA('#t4-pay-body tr', root);
-
-    /* model cards */
-    var cards = Q('#t4-cards', root);
-    if (cards && ANCH.length) {
-      var order = ANCH.slice().reverse();   // A, B, C — expensive first, as in the plan
-      cards.innerHTML = order.map(function (a) {
-        var st = (a.bands || []).map(function (b) { return F.pctRaw(b).replace(' %', ''); }).join(' / ') + ' %';
-        return '<div class="panel t4-card' + (a.recommended ? ' panel--gold t4-card--rec' : '') +
-          '" data-anchor="' + A(a.id) + '" data-upfront="' + A(a.upfront) + '">' +
-          '<p class="t4-card__tag"><span class="t4-card__id">' + A(a.id) + '</span> ' + A(a.name || '') +
-          (a.recommended ? '<span class="chip t4-chip-gold t4-card__flag">Empfehlung</span>' : '') + '</p>' +
-          '<p class="stat__n stat__n--sm num t4-card__up">' + A(F.eur(a.upfront)) + '</p>' +
-          '<dl class="t4-kv t4-kv--tight">' +
-          '<dt>Treppe</dt><dd class="num">' + A(st) + '</dd>' +
-          '<dt>Laufzeit</dt><dd class="num">' + A(F.months(a.term)) + '</dd>' +
-          '<dt>Mindestabruf</dt><dd class="num">' + A(F.eur(a.min)) + ' / Monat</dd>' +
-          '</dl>' +
-          '<p class="note t4-card__note">' + A(a.note || '') + '</p>' +
-          '<button type="button" class="t4-card__pick">Modell ' + A(a.id) + ' einstellen</button>' +
-          '</div>';
-      }).join('');
-    }
-    R.cards = QA('.t4-card', root);
-    R.picks = QA('.t4-card__pick', root);
-
-    /* staircase rows */
-    var sbody = Q('#t4-stair-body', root);
-    if (sbody) {
-      var srows = '', k;
-      for (k = 0; k < NBANDS; k++) {
-        var lab = BLAB[k] || {};
-        srows += '<tr>' +
-          '<th scope="row" class="num">' + A(lab.range || '') + '</th>' +
-          '<td class="wrap">' + A(lab.phase || '') + '</td>' +
-          '<td class="num gold"></td><td class="num"></td><td class="num"></td>' +
-          '<td class="wrap dim">' + A(lab.why || '') + '</td></tr>';
-      }
-      srows += '<tr class="is-total"><th scope="row">Summe</th><td class="wrap"></td>' +
-        '<td class="num" id="t4-stair-eff"></td><td class="num" id="t4-stair-rev2"></td>' +
-        '<td class="num" id="t4-stair-sum"></td>' +
-        '<td class="wrap dim">effektiver Anteil am Gesamtumsatz</td></tr>';
-      sbody.innerHTML = srows;
-    }
-    R.stairRows = QA('#t4-stair-body tr', root);
-    if (DEAL.staircaseNote) {
-      var sn = Q('#t4-stair-note', root);
-      if (sn) sn.textContent = DEAL.staircaseNote;
-    }
-
-    /* chart value table */
-    var cbody = Q('#t4-cht-body', root);
-    if (cbody) {
-      cbody.innerHTML = SCEN.map(function () {
-        return '<tr><th scope="row" class="num"></th><td class="num"></td><td class="num"></td><td class="num"></td></tr>';
-      }).join('');
-    }
-    R.chtRows = QA('#t4-cht-body tr', root);
-
-    /* --- cache every node update() writes to ------------------------------- */
-
-    [
-      'mini', 'mini-up', 'mini-pct', 'mini-term',
-      'slider', 'fill', 'cfg-up', 'seg-hint',
-      'k-model', 'k-up', 'k-now', 'k-term', 'k-min', 'k-bands',
-      'scen-input', 'pay-meta', 'pay-note',
-      'c-year', 'c-pct', 'c-ret', 'c-total', 'c-break',
-      'r-total', 'r-agency', 'r-vsbuy', 'r-min', 'r-cross',
-      'g-fill', 'g-mark', 'g-limit', 'g-val', 'g-note',
-      'warn-margin', 'warn-share', 'between',
-      'stair-rev', 'stair-eff', 'stair-rev2', 'stair-sum',
-      'svg', 'cliprect', 'grid', 'ylab', 'p-r', 'p-c',
-      'ref-buy', 'ref-buyl', 'ref-buyl2', 'ref-ret', 'ref-retl',
-      'scen-line', 'dot-r', 'dot-c', 'lab-r', 'lab-c',
-      'cross', 'cross-d', 'cross-l', 'chart-note'
-    ].forEach(function (id) { R[id] = Q('#t4-' + id, root); });
-
-    R.gauge = Q('.t4-gauge', root);
-    R.bandChips = R['k-bands'] ? QA('.chip', R['k-bands']) : [];
-    R.gridLines = R.grid ? QA('line', R.grid) : [];
-    R.yLabels = R.ylab ? QA('text', R.ylab) : [];
-    R.xLabels = QA('.t4-svg > g.t4-axlab[text-anchor="middle"] text', root);
-
-    /* the four band chips must match NBANDS */
-    if (R['k-bands'] && R.bandChips.length !== NBANDS) {
-      var chips = '', z;
-      for (z = 0; z < NBANDS; z++) chips += '<span class="chip num"></span>';
-      R['k-bands'].innerHTML = chips;
-      R.bandChips = QA('.chip', R['k-bands']);
-    }
-
-    /* --- wiring ----------------------------------------------------------- */
-
-    var pending = null, raf = 0;
-    function pushUpfront(v) {
-      pending = v;
-      if (raf) return;
-      raf = requestAnimationFrame(function () { raf = 0; var p = pending; pending = null; LEGACY_APP.set({ upfront: p }); });
-    }
-
-    if (R.slider) {
-      R.slider.addEventListener('input', function () {
-        var v = parseInt(R.slider.value, 10);
-        if (isNaN(v)) return;
-        paintSlider(v);           // fill + headline follow the thumb with zero lag
-        pushUpfront(v);
-      });
-      R.slider.addEventListener('change', function () {
-        var v = parseInt(R.slider.value, 10);
-        if (!isNaN(v)) { pending = null; LEGACY_APP.set({ upfront: v }); }
-      });
-    }
-
-    R.ticks.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var v = parseInt(b.getAttribute('data-upfront'), 10);
-        if (!isNaN(v)) LEGACY_APP.set({ upfront: v });
-      });
-    });
-
-    R.segs.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var n = parseInt(b.getAttribute('data-n'), 10);
-        if (!isNaN(n)) LEGACY_APP.set({ instalments: n });
-      });
-    });
-
-    R.scens.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var v = parseFloat(b.getAttribute('data-rev'));
-        if (!isNaN(v)) LEGACY_APP.set({ scenario: v });
-      });
-    });
-
-    if (R['scen-input']) {
-      R['scen-input'].addEventListener('input', function () {
-        var v = parseFloat(R['scen-input'].value);
-        if (!isNaN(v) && v >= 0) LEGACY_APP.set({ scenario: v });
-      });
-    }
-
-    R.picks.forEach(function (b, i) {
-      b.addEventListener('click', function () {
-        var card = R.cards[i];
-        var v = card && parseInt(card.getAttribute('data-upfront'), 10);
-        if (v && !isNaN(v)) LEGACY_APP.set({ upfront: v });
-      });
-    });
-
-    /* sticky offset — the header is sticky and its height is fluid */
-    measure();
-    var mraf = 0;
-    window.addEventListener('resize', function () {
-      if (mraf) return;
-      mraf = requestAnimationFrame(function () { mraf = 0; measure(); });
-    });
-
-    /* draw-in: first time the chart is actually on screen, once, 400 ms */
-    if (R.cliprect && !LEGACY_APP.reduced) {
-      R.cliprect.style.transform = 'scaleX(0)';
-      if (window.IntersectionObserver) {
-        var io = new IntersectionObserver(function (es) {
-          for (var i = 0; i < es.length; i++) {
-            if (es[i].isIntersecting) { drawIn(); io.disconnect(); return; }
-          }
-        }, { threshold: 0.15 });
-        io.observe(R.svg || R.cliprect);
-      } else {
-        drawIn();
-      }
-    }
-
-    lastKey = null;
-    write(LEGACY_APP.state);
-  }
-
-  function drawIn() {
-    if (drawn || !R.cliprect) return;
-    drawn = true;
-    R.cliprect.style.transform = '';
-    R.cliprect.classList.add('is-drawing');
-  }
-
-  function measure() {
-    var root = document.getElementById('panel-4');
-    var hdr = document.querySelector('.hdr');
-    var t4 = root && root.querySelector('.t4');
-    if (t4 && hdr) t4.style.setProperty('--t4-stick', Math.round(hdr.offsetHeight) + 'px');
-  }
-
-  /* ------------------------------------------------- the zero-lag repaint -- */
-
-  function paintSlider(v) {
-    var span = (SL.max - SL.min) || 1;
-    var t = clamp((v - SL.min) / span, 0, 1);
-    if (R.fill) R.fill.style.transform = 'scaleX(' + t.toFixed(4) + ')';
-    if (R['cfg-up']) { R['cfg-up'].setAttribute('data-v', v); R['cfg-up'].textContent = F.eur(v); }
-    if (R.slider) R.slider.setAttribute('aria-valuetext', valueText(v));
-  }
-
-  function valueText(v) {
-    var c = interp(v);
-    return F.num(v) + ' Euro Einmalzahlung, ' +
-      F.num1(c.bands[0]) + ' Prozent Startbeteiligung, ' +
-      F.num(c.term) + ' Monate Laufzeit, ' +
-      F.num(c.min) + ' Euro Mindestabruf im Monat';
-  }
-
-  /* --------------------------------------------------------------- update -- */
-
-  function write(state) {
-    var up = clamp(Number(state.upfront) || SL.default, SL.min, SL.max);
-    var inst = Number(state.instalments) || 1;
-    var rev = Math.max(0, Number(state.scenario) || 0);
-
-    var key = up + '|' + inst + '|' + rev;
-    if (key === lastKey) return;
-    lastKey = key;
-
-    var d = derive(up, inst, rev);
-
-    /* -- control ---------------------------------------------------------- */
-    if (R.slider && parseInt(R.slider.value, 10) !== up) R.slider.value = up;
-    paintSlider(up);
-
-    R.ticks.forEach(function (b) {
-      b.classList.toggle('is-on', parseInt(b.getAttribute('data-upfront'), 10) === up);
-    });
-    R.segs.forEach(function (b) {
-      b.setAttribute('aria-pressed', parseInt(b.getAttribute('data-n'), 10) === inst ? 'true' : 'false');
-    });
-    R.scens.forEach(function (b) {
-      b.setAttribute('aria-pressed', parseFloat(b.getAttribute('data-rev')) === rev ? 'true' : 'false');
-    });
-    if (R['scen-input'] && document.activeElement !== R['scen-input']) R['scen-input'].value = rev;
-
-    var hint = (INST.filter(function (o) { return o.n === inst; })[0] || {}).hint || '';
-    if (R['seg-hint']) R['seg-hint'].textContent = hint;
-
-    /* -- mobile summary --------------------------------------------------- */
-    if (R['mini-up']) R['mini-up'].textContent = F.eur(up);
-    if (R['mini-pct']) R['mini-pct'].textContent = F.pctRaw(d.bands[0]);
-    if (R['mini-term']) R['mini-term'].textContent = F.months(d.term);
-
-    /* -- panel 1 · Konfiguration ------------------------------------------ */
-    if (R['k-model']) R['k-model'].textContent = modelName(d.cfg);
-    if (R['k-up']) R['k-up'].textContent = F.eur(up);
-    if (R['k-now']) R['k-now'].textContent = inst === 1 ? F.eur(d.payNow) : F.eur(d.per) + ' × ' + inst;
-    if (R['k-term']) R['k-term'].textContent = F.months(d.term);
-    if (R['k-min']) R['k-min'].textContent = F.eur(d.min) + ' / Monat';
-    for (var i = 0; i < R.bandChips.length; i++) {
-      R.bandChips[i].textContent = F.pctRaw(d.bands[i] || 0);
-    }
-
-    /* -- panel 3 · Für SONNWERK ------------------------------------------- */
-    LEGACY_APP.countUp(R['c-year'], d.clientYear, F.eur);
-    if (R['c-pct']) R['c-pct'].textContent = F.pct(d.clientPct);
-    if (R['c-ret']) R['c-ret'].textContent = F.eur(d.clientYear);
-    if (R['c-total']) R['c-total'].textContent = F.eur(d.clientTerm);
-    if (R['c-break']) {
-      R['c-break'].textContent = 'Basis ist der vereinnahmte Netto-Onlineumsatz aller vereinbarten digitalen Kan\u00e4le. Neue B2B- und Neumarkt-Kunden werden separat je Kunde provisioniert.';
-    }
-
-    /* -- panel 4 · Für Rustam --------------------------------------------- */
-    LEGACY_APP.countUp(R['r-total'], d.clientYear, F.eur);
-    if (R['r-agency']) R['r-agency'].textContent = F.pct(d.clientPct);
-    if (R['r-vsbuy']) R['r-vsbuy'].textContent = F.eur(d.total);
-    if (R['r-min']) R['r-min'].textContent = F.eur(d.min);
-    if (R['r-cross']) {
-      R['r-cross'].textContent = 'Jahreszahlung von SONNWERK und Jahreserhalt von Rustam sind dieselbe Zahl; das Gesamt über die Laufzeit steht separat.';
-    }
-
-    /* -- Block C · die Grenze --------------------------------------------- */
-    writeGauge(d);
-
-    /* -- Zahlplan ---------------------------------------------------------- */
-    writeSchedule(d, inst);
-
-    /* -- Block D · Modelle ------------------------------------------------- */
-    writeCards(d, up);
-
-    /* -- Block E · Diagramm ------------------------------------------------ */
-    writeChart(d);
-
-    /* -- Block F · Treppe -------------------------------------------------- */
-    writeStairs(d, rev);
-  }
-
-  function modelName(cfg) {
-    if (cfg.id) return (cfg.lo && cfg.lo.name) ? cfg.lo.name : 'Das Angebot';
-    if (cfg.lo && cfg.hi && cfg.lo !== cfg.hi) return 'zwischen ' + cfg.hi.id + ' und ' + cfg.lo.id;
-    return 'Konfiguration';
-  }
-
-  /* ------------------------------------------------------------ the gauge -- */
-
-  function writeGauge(d) {
-    var v = isFinite(d.ofMargin) ? d.ofMargin : 1;
-    var SCALE = 0.5;                                  // the bar runs 0–50 %
-    var pctW = clamp(v / SCALE, 0, 1) * 100;
-    if (R['g-fill']) R['g-fill'].style.width = pctW.toFixed(2) + '%';
-    if (R['g-mark']) R['g-mark'].style.left = pctW.toFixed(2) + '%';
-    if (R['g-limit']) R['g-limit'].style.left = (LIM_MARGIN / SCALE * 100).toFixed(2) + '%';
-    LEGACY_APP.countUp(R['g-val'], v, F.pct);
-    if (R['g-note']) {
-      R['g-note'].textContent = d.rev > 0
-        ? F.eur(d.clientYear) + ' von ' + F.eur(d.gross) + ' Bruttomarge (' +
-          F.pct(GM) + ' von ' + F.eur(d.rev) + ').'
-        : 'Ohne Umsatz greift der Mindestabruf von ' + F.eur(d.min) + ' im Monat — es gibt keine Marge, an der er gemessen werden kann.';
-    }
-    if (R.gauge) R.gauge.classList.toggle('is-over', !!d.overMargin);
-    if (R['warn-margin']) R['warn-margin'].hidden = !d.overMargin;
-    if (R['warn-share']) R['warn-share'].hidden = !d.overShare;
-  }
-
-  /* --------------------------------------------------------- the schedule -- */
-
-  function writeSchedule(d, inst) {
-    if (!R.payRows.length) return;
-    var total = R.payRows.length - 1, i;
-    for (i = 0; i < total; i++) {
-      var tr = R.payRows[i];
-      var on = i < inst;
-      tr.hidden = !on;
-      if (!on) continue;
-      tr.cells[1].textContent = F.eur(d.per);
-      tr.cells[2].textContent = inst === 1 ? 'eine Rate' : 'Rate ' + (i + 1) + ' von ' + inst;
-    }
-    var last = R.payRows[total];
-    last.cells[1].textContent = F.eur(d.payNow);
-    last.cells[2].textContent = inst === 1 ? 'einmalig' : 'gleiche Summe, andere Fälligkeiten';
-    if (R['pay-meta']) R['pay-meta'].innerHTML = '<span class="num">' + A(inst === 1 ? '1 Rate' : inst + ' Raten') + '</span>';
-    if (R['pay-note']) {
-      R['pay-note'].textContent = 'Die gewählte Einmalzahlung bleibt bei einer oder mehreren Raten gleich; der Zahlplan ändert nur die Fälligkeiten.';
-    }
-  }
-
-  /* ------------------------------------------------------------- the cards -- */
-
-  function writeCards(d, up) {
-    var loId = d.cfg.lo && d.cfg.lo.id, hiId = d.cfg.hi && d.cfg.hi.id;
-    for (var i = 0; i < R.cards.length; i++) {
-      var card = R.cards[i];
-      var id = card.getAttribute('data-anchor');
-      var exact = parseInt(card.getAttribute('data-upfront'), 10) === up;
-      var near = !d.cfg.id && (id === loId || id === hiId);
-      card.classList.toggle('is-active', exact);
-      card.classList.toggle('is-near', !exact && near);
-      if (R.picks[i]) R.picks[i].textContent = exact ? 'Eingestellt' : 'Modell ' + id + ' einstellen';
-    }
-    if (R.between) {
-      R.between.textContent = d.cfg.id
-        ? 'Aktuell: Modell ' + d.cfg.id
-        : 'Aktuell: ' + modelName(d.cfg) + ' — ' + F.eur(up);
-    }
-  }
-
-  /* ------------------------------------------------------------- the chart -- */
-
-  function writeChart(d) {
-    if (!R['p-r'] || !R['p-c']) return;
-
-    var maxScen = Math.max.apply(null, SCEN.concat([d.rev]));
-    var xmax = niceStep(maxScen * 1.05 / 4) * 4;
-    var bands = d.bands, term = d.term, minM = d.min, up = d.up;
-
-    function fR(r) { return Math.max(annualShare(r, bands), minM * 12); }
-    function fC(r) { return Math.max(annualShare(r, bands), minM * 12); }
-
-    /* sample: even steps plus every band edge and the floor break, so the
-       staircase's kinks are drawn where they actually are */
-    var xs = [0, xmax], i;
-    for (i = 0; i < 24; i++) xs.push(xmax * i / 24);
-    for (i = 0; i < EDGES.length; i++) if (EDGES[i] < xmax) xs.push(EDGES[i]);
-    var floorRev = solve(function (r) { return annualShare(r, bands); }, minM * 12);
-    if (floorRev != null && floorRev < xmax) xs.push(floorRev);
-    xs.sort(function (a, b) { return a - b; });
-
-    var ymax = niceStep(fR(xmax) / 4) * 4;
-    if (!(ymax > 0)) ymax = 1;
-
-    function sx(r) { return CX0 + clamp(r / xmax, 0, 1) * (CX1 - CX0); }
-    function sy(v) { return CY1 - clamp(v / ymax, 0, 1) * (CY1 - CY0); }
-
-    var dr = '', dc = '', prev = -1;
-    for (i = 0; i < xs.length; i++) {
-      if (xs[i] === prev) continue;
-      prev = xs[i];
-      var p = (dr ? ' L ' : 'M ');
-      dr += p + sx(xs[i]).toFixed(1) + ' ' + sy(fR(xs[i])).toFixed(1);
-      dc += (dc ? ' L ' : 'M ') + sx(xs[i]).toFixed(1) + ' ' + sy(fC(xs[i])).toFixed(1);
-    }
-    R['p-r'].setAttribute('d', dr);
-    R['p-c'].setAttribute('d', dc);
-
-    /* axes */
-    var step = ymax / 4;
-    for (i = 0; i < R.gridLines.length && i < 5; i++) {
-      var yv = step * i, yy = sy(yv);
-      R.gridLines[i].setAttribute('y1', yy); R.gridLines[i].setAttribute('y2', yy);
-      if (R.yLabels[i]) { R.yLabels[i].setAttribute('y', yy + 4); R.yLabels[i].textContent = F.eurK(yv); }
-    }
-    for (i = 0; i < R.xLabels.length && i < 5; i++) {
-      var xv = xmax * i / 4;
-      R.xLabels[i].setAttribute('x', sx(xv));
-      R.xLabels[i].textContent = i === 0 ? '0' : F.eurK(xv);
-    }
-
-    /* reference lines */
-    setRef(R['ref-buy'], R['ref-buyl'], R['ref-buyl2'], sy(0), '', '', false);
-    setRef(R['ref-ret'], R['ref-retl'], null, sy(0), '', null, false);
-
-    /* scenario marker */
-    var xs2 = sx(d.rev);
-    if (R['scen-line']) {
-      R['scen-line'].setAttribute('x1', xs2.toFixed(1));
-      R['scen-line'].setAttribute('x2', xs2.toFixed(1));
-      R['scen-line'].setAttribute('y1', CY0); R['scen-line'].setAttribute('y2', CY1);
-    }
-    var yr = sy(d.clientYear), yc = sy(d.clientYear);
-    if (R['dot-r']) { R['dot-r'].setAttribute('cx', xs2.toFixed(1)); R['dot-r'].setAttribute('cy', yr.toFixed(1)); }
-    if (R['dot-c']) { R['dot-c'].setAttribute('x', (xs2 - 5).toFixed(1)); R['dot-c'].setAttribute('y', (yc - 5).toFixed(1)); }
-
-    /* direct labels — flipped to the left when the marker sits near the right edge */
-    var flip = xs2 > CX1 - 190;
-    label(R['lab-r'], xs2, yr - 10, flip, F.eur(d.clientYear) + ' — Rustam pro Jahr');
-    label(R['lab-c'], xs2, yc + 18, flip, F.eur(d.clientYear) + ' — SONNWERK pro Jahr');
-
-    /* crossover against the agency buy-out */
-    if (R.cross) {
-      var show = false;
-      R.cross.setAttribute('opacity', show ? '1' : '0');
-      if (show) {
-        var cx = sx(d.crossover), cy = sy(BUYOUT);
-        R['cross-d'].setAttribute('cx', cx.toFixed(1)); R['cross-d'].setAttribute('cy', cy.toFixed(1));
-        var cflip = cx > CX1 - 150;
-        R['cross-l'].setAttribute('x', (cx + (cflip ? -8 : 8)).toFixed(1));
-        R['cross-l'].setAttribute('y', (cy - 9).toFixed(1));
-        R['cross-l'].setAttribute('text-anchor', cflip ? 'end' : 'start');
-        R['cross-l'].textContent = 'Schnittpunkt ' + F.eur(d.crossover);
-      }
-    }
-
-    /* the same series as numbers */
-    for (i = 0; i < R.chtRows.length; i++) {
-      var r = SCEN[i];
-      var tr = R.chtRows[i];
-      var cy2 = fC(r), gr = r * GM;
-      tr.cells[0].textContent = F.eur(r);
-      tr.cells[1].textContent = F.eur(cy2);
-      tr.cells[2].textContent = F.eur(fR(r));
-      tr.cells[3].textContent = gr > 0 ? F.pct(cy2 / gr) : '–';
-      tr.classList.toggle('t4-cht-on', r === d.rev);
-    }
-  }
-
-  function setRef(line, lab, lab2, y, text, text2, show) {
-    if (line) {
-      line.setAttribute('y1', y.toFixed(1)); line.setAttribute('y2', y.toFixed(1));
-      line.setAttribute('opacity', show ? '1' : '0');
-    }
-    if (lab) {
-      lab.setAttribute('y', (y - 4).toFixed(1));
-      lab.setAttribute('opacity', show ? '1' : '0');
-      lab.textContent = text;
-    }
-    if (lab2) {
-      lab2.setAttribute('y', (y + 8).toFixed(1));
-      lab2.setAttribute('opacity', show ? '1' : '0');
-      if (text2) lab2.textContent = text2;
-    }
-  }
-
-  function label(el, x, y, flip, text) {
-    if (!el) return;
-    el.setAttribute('x', (x + (flip ? -9 : 9)).toFixed(1));
-    el.setAttribute('y', clamp(y, CY0 + 4, CY1 + 10).toFixed(1));
-    el.setAttribute('text-anchor', flip ? 'end' : 'start');
-    el.textContent = text;
-  }
-
-  /* ------------------------------------------------------------ the stairs -- */
-
-  function writeStairs(d, rev) {
-    if (!R.stairRows.length) return;
-    var s = slices(rev), i;
-    for (i = 0; i < NBANDS && i < R.stairRows.length - 1; i++) {
-      var tr = R.stairRows[i];
-      tr.cells[2].textContent = F.pctRaw(d.bands[i] || 0);
-      tr.cells[3].textContent = F.eur(s[i]);
-      tr.cells[4].textContent = F.eur(s[i] * (d.bands[i] || 0) / 100);
-      tr.classList.toggle('is-off', s[i] <= 0);
-    }
-    if (R['stair-rev']) R['stair-rev'].textContent = F.eur(rev);
-    if (R['stair-eff']) R['stair-eff'].textContent = rev > 0 ? F.pct(d.share / rev) : '–';
-    if (R['stair-rev2']) R['stair-rev2'].textContent = F.eur(rev);
-    if (R['stair-sum']) R['stair-sum'].textContent = F.eur(d.share);
-  }
-
-  /* ------------------------------------------------------------- register -- */
-
-  LEGACY_APP.register('panel-4', {
-    mount: mount,
-    update: function (state) {
-      write(state);
-      if (!drawn && state.tab === 4 && R.cliprect && !LEGACY_APP.reduced) {
-        /* the tab just became visible and the observer has not fired yet */
-        requestAnimationFrame(function () {
-          if (!drawn && R.svg && R.svg.getBoundingClientRect().width > 0) drawIn();
-        });
-      }
-    }
   });
 })();
 </script>

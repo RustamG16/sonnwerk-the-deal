@@ -352,15 +352,13 @@ Do not price it as a template or prototype. No invented quotes or compliance gua
   };
 }));
 
-(function () {
+/* Shared UI for the SONNWERK proposal slider. Used by the landing page and the Control Room.
+   Every element lookup is scoped to the root passed to init(), so one page can host it anywhere. */
+(function (global) {
   'use strict';
-
-  var model = window.SonnwerkDealModel;
-  if (!model) return;
 
   var money = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
   var number = new Intl.NumberFormat('en-IE', { maximumFractionDigits: 0 });
-  var doc = document;
 
   function formatMoney(value) { return money.format(value); }
   function formatRate(rate) {
@@ -372,12 +370,138 @@ Do not price it as a template or prototype. No invented quotes or compliance gua
     if (meter === 100) return 'Maximum revenue share';
     return 'Your selection';
   }
+  function points(values, minimum, maximum) {
+    var left = 48, right = 616, top = 24, bottom = 236;
+    var range = Math.max(1, maximum - minimum);
+    return values.map(function (value, index) {
+      var x = left + ((right - left) * index / (values.length - 1));
+      var y = bottom - ((value - minimum) / range * (bottom - top));
+      return (index ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+    }).join(' ');
+  }
+
+  function init(root, model) {
+    model = model || global.SonnwerkDealModel;
+    if (!root || !model) return;
+    function q(selector) { return root.querySelector(selector); }
+    function setText(selector, value) { var element = q(selector); if (element) element.textContent = value; }
+
+    var meter = q('[data-deal-meter]') || q('#deal-meter');
+    var inputs = Array.prototype.slice.call(root.querySelectorAll('[data-sales-input]'));
+    if (!meter || inputs.length !== 4) return;
+    var error = q('[data-form-error]');
+    var scenarios = [0, 10000, 20000, 50000, 100000, 250000, 700000];
+    var tierBody = q('[data-tier-body]');
+    var scenarioBody = q('[data-scenario-body]');
+    var basePath = q('[data-chart-base]');
+    var selectedPath = q('[data-chart-selected]');
+    var salesOutputs = Array.prototype.slice.call(root.querySelectorAll('[data-sales-dependent]'));
+    var chartValues = q('[data-chart-values]');
+
+    function readSales() {
+      var values = [];
+      var invalid = [];
+      inputs.forEach(function (input, index) {
+        var raw = input.value.trim();
+        var value = raw === '' ? NaN : Number(raw.replace(',', '.'));
+        if (!Number.isFinite(value) || value < 0) invalid.push(index); else values.push(value);
+      });
+      if (invalid.length) {
+        var issue = new RangeError('Please enter a non-negative revenue for ' + invalid.map(function (index) { return 'Year ' + (index + 1); }).join(', ') + '.');
+        issue.invalid = invalid;
+        throw issue;
+      }
+      return values;
+    }
+    function renderTiers(terms) {
+      Array.prototype.slice.call(tierBody.rows).forEach(function (row, index) {
+        row.cells[1].textContent = formatRate(model.BASE_RATES[index]);
+        row.cells[2].textContent = formatRate(terms.rates[index]);
+      });
+    }
+    function renderScenarios(value) {
+      scenarioBody.replaceChildren();
+      scenarios.forEach(function (sales) {
+        var result = model.scenario(sales, value);
+        var row = document.createElement('tr');
+        [number.format(sales), formatMoney(result.baseline.total), formatMoney(result.selected.total), formatMoney(result.difference)].forEach(function (text) {
+          var cell = document.createElement('td'); cell.textContent = text; row.appendChild(cell);
+        });
+        scenarioBody.appendChild(row);
+      });
+    }
+    function renderChart(result, meterValue) {
+      var baselineValues = [result.baseline.upfront].concat(result.cumulative.baseline);
+      var selectedValues = [result.selected.upfront].concat(result.cumulative.selected);
+      var all = baselineValues.concat(selectedValues);
+      var low = Math.min.apply(null, all);
+      var high = Math.max.apply(null, all);
+      basePath.setAttribute('d', points(baselineValues, low, high));
+      selectedPath.setAttribute('d', points(selectedValues, low, high));
+      setText('[data-chart-y-top]', formatMoney(high));
+      setText('[data-chart-y-mid]', formatMoney((high + low) / 2));
+      setText('[data-chart-y-bottom]', formatMoney(low));
+      // At the base position both lines are the same line: label it once.
+      var same = meterValue === 0;
+      setText('[data-chart-series-base]', 'Base rate');
+      setText('[data-chart-series-selected]', same ? '' : selectionText(meterValue));
+      var comparison = result.difference === 0 ? 'the same as the base rate' : result.difference > 0 ? formatMoney(result.difference) + ' higher than the base rate' : formatMoney(Math.abs(result.difference)) + ' lower than the base rate';
+      setText('[data-comparison-summary]', same ? 'Base rate: after four years SONNWERK has paid ' + formatMoney(result.baseline.total) + ' in total.' : selectionText(meterValue) + ': after four years the total is ' + comparison + '.');
+      if (chartValues) {
+        chartValues.replaceChildren();
+        function describe(label, values) {
+          return label + ': start ' + formatMoney(values[0]) + '; ' + values.slice(1).map(function (value, index) { return 'after year ' + (index + 1) + ' ' + formatMoney(value); }).join('; ') + '.';
+        }
+        [describe('Base rate', baselineValues), same ? 'Your selection: identical to the base rate.' : describe(selectionText(meterValue), selectedValues)].forEach(function (text) {
+          var item = document.createElement('li');
+          item.textContent = text;
+          chartValues.appendChild(item);
+        });
+      }
+    }
+    function update() {
+      var meterValue = Number(meter.value);
+      var terms = model.termsForMeter(meterValue);
+      meter.setAttribute('aria-valuetext', 'One-time payment ' + formatMoney(terms.upfront) + '; share on the first one hundred thousand euros ' + formatRate(terms.rates[0]) + '.');
+      setText('[data-upfront]', formatMoney(terms.upfront));
+      setText('[data-first-rate]', formatRate(terms.rates[0]));
+      renderTiers(terms);
+      renderScenarios(meterValue);
+      var sales;
+      try { sales = readSales(); }
+      catch (exception) {
+        inputs.forEach(function (input, index) { if (exception.invalid.indexOf(index) >= 0) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); });
+        error.hidden = false;
+        error.textContent = exception.message + ' The four-year total and the chart are hidden until the inputs are valid.';
+        salesOutputs.forEach(function (output) { output.hidden = true; });
+        return;
+      }
+      inputs.forEach(function (input) { input.removeAttribute('aria-invalid'); });
+      error.hidden = true;
+      error.textContent = '';
+      var result = model.evaluate(sales, meterValue);
+      setText('[data-selected-total]', formatMoney(result.selected.total));
+      salesOutputs.forEach(function (output) { output.hidden = false; });
+      renderChart(result, meterValue);
+    }
+    meter.addEventListener('input', update);
+    inputs.forEach(function (input) { input.addEventListener('input', update); input.addEventListener('change', update); });
+    update();
+  }
+
+  global.SonnwerkDealCalculator = { init: init };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
+(function () {
+  'use strict';
+
+  var model = window.SonnwerkDealModel;
+  if (!model) return;
+
+  var doc = document;
+
   function labelForClassification(value) {
     return value === 'self-reported' ? 'Self-reported' : value === 'measured' ? 'Measured' : 'Reconstructed';
-  }
-  function setText(selector, value) {
-    var element = doc.querySelector(selector);
-    if (element) element.textContent = value;
   }
 
   function updateProofRows() {
@@ -479,124 +603,11 @@ Do not price it as a template or prototype. No invented quotes or compliance gua
     }, { passive: true });
   }
 
-  function points(values, minimum, maximum) {
-    var left = 48, right = 616, top = 24, bottom = 236;
-    var range = Math.max(1, maximum - minimum);
-    return values.map(function (value, index) {
-      var x = left + ((right - left) * index / (values.length - 1));
-      var y = bottom - ((value - minimum) / range * (bottom - top));
-      return (index ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
-    }).join(' ');
-  }
-
-  function initCalculator() {
-    var meter = doc.querySelector('#deal-meter');
-    var inputs = Array.prototype.slice.call(doc.querySelectorAll('[data-sales-input]'));
-    if (!meter || inputs.length !== 4) return;
-    var error = doc.querySelector('[data-form-error]');
-    var scenarios = [0, 10000, 20000, 50000, 100000, 250000, 700000];
-    var tierBody = doc.querySelector('[data-tier-body]');
-    var scenarioBody = doc.querySelector('[data-scenario-body]');
-    var basePath = doc.querySelector('[data-chart-base]');
-    var selectedPath = doc.querySelector('[data-chart-selected]');
-    var salesOutputs = Array.prototype.slice.call(doc.querySelectorAll('[data-sales-dependent]'));
-    var chartValues = doc.querySelector('[data-chart-values]');
-
-    function readSales() {
-      var values = [];
-      var invalid = [];
-      inputs.forEach(function (input, index) {
-        var raw = input.value.trim();
-        var value = raw === '' ? NaN : Number(raw.replace(',', '.'));
-        if (!Number.isFinite(value) || value < 0) {
-          invalid.push(index);
-        } else {
-          values.push(value);
-        }
-      });
-      if (invalid.length) {
-        var issue = new RangeError('Please enter a non-negative revenue for ' + invalid.map(function (index) { return 'Year ' + (index + 1); }).join(', ') + '.');
-        issue.invalid = invalid;
-        throw issue;
-      }
-      return values;
-    }
-    function renderTiers(terms) {
-      Array.prototype.slice.call(tierBody.rows).forEach(function (row, index) {
-        row.cells[1].textContent = formatRate(model.BASE_RATES[index]);
-        row.cells[2].textContent = formatRate(terms.rates[index]);
-      });
-    }
-    function renderScenarios(value) {
-      scenarioBody.replaceChildren();
-      scenarios.forEach(function (sales) {
-        var result = model.scenario(sales, value);
-        var row = doc.createElement('tr');
-        [number.format(sales), formatMoney(result.baseline.total), formatMoney(result.selected.total), formatMoney(result.difference)].forEach(function (text) {
-          var cell = doc.createElement('td'); cell.textContent = text; row.appendChild(cell);
-        });
-        scenarioBody.appendChild(row);
-      });
-    }
-    function renderChart(result, meterValue) {
-      var baselineValues = [result.baseline.upfront].concat(result.cumulative.baseline);
-      var selectedValues = [result.selected.upfront].concat(result.cumulative.selected);
-      var all = baselineValues.concat(selectedValues);
-      var low = Math.min.apply(null, all);
-      var high = Math.max.apply(null, all);
-      basePath.setAttribute('d', points(baselineValues, low, high));
-      selectedPath.setAttribute('d', points(selectedValues, low, high));
-      setText('[data-chart-y-top]', formatMoney(high));
-      setText('[data-chart-y-mid]', formatMoney((high + low) / 2));
-      setText('[data-chart-y-bottom]', formatMoney(low));
-      setText('[data-chart-series-base]', 'Base rate');
-      setText('[data-chart-series-selected]', selectionText(meterValue));
-      var comparison = result.difference === 0 ? 'the same as the base rate' : result.difference > 0 ? formatMoney(result.difference) + ' higher than the base rate' : formatMoney(Math.abs(result.difference)) + ' lower than the base rate';
-      setText('[data-comparison-summary]', selectionText(meterValue) + ': after four years the total is ' + comparison + '.');
-      if (chartValues) {
-        chartValues.replaceChildren();
-        [['Base rate', baselineValues], [selectionText(meterValue), selectedValues]].forEach(function (series) {
-          var item = doc.createElement('li');
-          item.textContent = series[0] + ': start ' + formatMoney(series[1][0]) + '; ' + series[1].slice(1).map(function (value, index) { return 'after year ' + (index + 1) + ' ' + formatMoney(value); }).join('; ') + '.';
-          chartValues.appendChild(item);
-        });
-      }
-    }
-    function update() {
-      var meterValue = Number(meter.value);
-      var terms = model.termsForMeter(meterValue);
-      meter.setAttribute('aria-valuetext', 'One-time payment ' + formatMoney(terms.upfront) + '; share on the first one hundred thousand euros ' + formatRate(terms.rates[0]) + '.');
-      setText('[data-upfront]', formatMoney(terms.upfront));
-      setText('[data-first-rate]', formatRate(terms.rates[0]));
-      renderTiers(terms);
-      renderScenarios(meterValue);
-      var sales;
-      try { sales = readSales(); }
-      catch (exception) {
-        inputs.forEach(function (input, index) { if (exception.invalid.indexOf(index) >= 0) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); });
-        error.hidden = false;
-        error.textContent = exception.message + ' The four-year total and the chart are hidden until the inputs are valid.';
-        salesOutputs.forEach(function (output) { output.hidden = true; });
-        return;
-      }
-      inputs.forEach(function (input) { input.removeAttribute('aria-invalid'); });
-      error.hidden = true;
-      error.textContent = '';
-      var result = model.evaluate(sales, meterValue);
-      setText('[data-selected-total]', formatMoney(result.selected.total));
-      salesOutputs.forEach(function (output) { output.hidden = false; });
-      renderChart(result, meterValue);
-    }
-    meter.addEventListener('input', update);
-    inputs.forEach(function (input) { input.addEventListener('input', update); input.addEventListener('change', update); });
-    update();
-  }
-
   initReveals();
   updateProofRows();
   initYouTube();
   initWalkthrough();
-  initCalculator();
+  if (window.SonnwerkDealCalculator) window.SonnwerkDealCalculator.init(doc, model);
 }());
 
 (function(){
