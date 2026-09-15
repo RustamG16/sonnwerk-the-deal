@@ -1013,6 +1013,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
 .deal-meter .chart-card .kicker { margin-bottom: 4px; color: var(--brass); }
 .deal-meter .chart-card__head { display: flex; justify-content: space-between; align-items: start; gap: 32px; }
 .deal-meter .chart-card__head h3 { margin: 0; }
+.deal-meter .chart-card__how { max-width: 72ch; margin: 12px 0 0; color: var(--text-muted); font-size: 14px; line-height: 1.55; }
 .deal-meter .chart-card__head > p { font-size: 13px; white-space: nowrap; }
 .deal-meter .chart-key { display: inline-block; width: 18px; margin: 0 5px 2px 12px; border-top: 3px solid; }
 .deal-meter .chart-key--base { border-color: var(--brass); }
@@ -1887,8 +1888,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
     <div class="deal-grid__inputs"><h3>Annual eligible online revenue</h3><p>The bands start again in every contract year. Enter only the net basis to be defined in the contract; VAT, returns, discounts, shipping and other deductions are settled in the contract.</p><div class="annual-inputs"><label>Year 1 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 2 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 3 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label><label>Year 4 <input inputmode="decimal" type="number" min="0" step="any" value="20000" data-sales-input></label></div><p class="form-error" data-form-error role="alert" hidden></p></div>
     <div class="deal-grid__tiers"><h3>Annual bands</h3><p class="detail-note">Displayed percentages are rounded to two decimals. The calculation uses the unrounded rates.</p><table><thead><tr><th>Range</th><th>Base rate</th><th>Your selection</th></tr></thead><tbody data-tier-body><tr><th>Up to €100,000</th><td>18%</td><td>18%</td></tr><tr><th>Over €100,000 up to €250,000</th><td>14%</td><td>14%</td></tr><tr><th>Over €250,000 up to €600,000</th><td>10%</td><td>10%</td></tr><tr><th>Over €600,000</th><td>7%</td><td>7%</td></tr></tbody></table></div>
   </div>
-  <div class="chart-card" data-sales-dependent><div class="chart-card__head"><div><p class="kicker">Four years · assumes continuation, not a guaranteed contract</p><h3>What SONNWERK pays in total, year by year</h3></div><p><span class="chart-key chart-key--base"></span>Base rate <span class="chart-key chart-key--selected"></span>Your selection</p></div><svg class="payment-chart" viewBox="0 0 640 280" role="img" aria-labelledby="cr-chart-title cr-chart-desc"><title id="cr-chart-title">Cumulative payments over four years</title><desc id="cr-chart-desc">The lines show the one-time payment plus the yearly shares, added up, for the base rate and the current selection.</desc><g class="chart-grid"><line x1="48" y1="24" x2="616" y2="24"></line><line x1="48" y1="130" x2="616" y2="130"></line><line x1="48" y1="236" x2="616" y2="236"></line></g><g class="chart-axis"><text x="0" y="28" data-chart-y-top>€32,400</text><text x="0" y="134" data-chart-y-mid>€25,200</text><text x="0" y="240" data-chart-y-bottom>€18,000</text></g><path class="chart-line chart-line--base" data-chart-base d="M48 236 L190 210 L332 184 L474 158 L616 132"></path><path class="chart-line chart-line--selected" data-chart-selected d="M48 236 L190 210 L332 184 L474 158 L616 132"></path><g class="chart-series"><text x="500" y="146" data-chart-series-base>Base rate</text><text x="500" y="126" data-chart-series-selected>Your selection</text></g><g class="chart-labels"><text x="48" y="264">Start</text><text x="181" y="264">Year 1</text><text x="323" y="264">Year 2</text><text x="465" y="264">Year 3</text><text x="590" y="264">Year 4</text></g></svg><p class="chart-card__summary" data-comparison-summary>Base rate: both lines coincide at four times €20,000 annual revenue; the total is €32,400.</p><ul class="chart-data" data-chart-values><li>Base rate: start €18,000; after year 1 €21,600; after year 2 €25,200; after year 3 €28,800; after year 4 €32,400.</li><li>Your selection: identical to the base rate.</li></ul></div>
-  <div class="scenario-block"><div><p class="kicker">Low and zero revenue visible</p><h3>Same online revenue every year: four-year total for SONNWERK</h3></div><div class="table-wrap table-wrap--dark" tabindex="0" aria-label="Scenario table, scrolls horizontally if needed"><table><thead><tr><th>Annual revenue</th><th>Base rate total</th><th>Your selection total</th><th>Difference</th></tr></thead><tbody data-scenario-body><tr><td>€0</td><td>€18,000</td><td>€18,000</td><td>€0</td></tr><tr><td>€10,000</td><td>€25,200</td><td>€25,200</td><td>€0</td></tr><tr><td>€20,000</td><td>€32,400</td><td>€32,400</td><td>€0</td></tr><tr><td>€50,000</td><td>€54,000</td><td>€54,000</td><td>€0</td></tr><tr><td>€100,000</td><td>€90,000</td><td>€90,000</td><td>€0</td></tr><tr><td>€250,000</td><td>€174,000</td><td>€174,000</td><td>€0</td></tr><tr><td>€700,000</td><td>€342,000</td><td>€342,000</td><td>€0</td></tr></tbody></table></div></div>
+  <div class="chart-card" data-sales-dependent><div class="chart-card__head"><div><p class="kicker">Four years · assumes continuation, not a guaranteed contract</p><h3>What SONNWERK pays in total, year by year</h3></div><p><span class="chart-key chart-key--base"></span>Base rate <span class="chart-key chart-key--selected"></span>Your selection</p></div><p class="chart-card__how">Each line starts at the one-time payment and rises by that year's share of online sales. Orange is the base offer: €18,000 and 18% on the first €100,000 a year. Dark is the split chosen on the slider. Where the lines cross, the lower one-time payment stops being the cheaper choice overall.</p><svg class="payment-chart" viewBox="0 0 640 280" role="img" aria-labelledby="cr-chart-title cr-chart-desc"><title id="cr-chart-title">Cumulative payments over four years</title><desc id="cr-chart-desc">The lines show the one-time payment plus the yearly shares, added up, for the base rate and the current selection.</desc><g class="chart-grid"><line x1="96" y1="24" x2="616" y2="24"></line><line x1="96" y1="130" x2="616" y2="130"></line><line x1="96" y1="236" x2="616" y2="236"></line></g><g class="chart-axis"><text x="0" y="28" data-chart-y-top>€32,400</text><text x="0" y="134" data-chart-y-mid>€25,200</text><text x="0" y="240" data-chart-y-bottom>€18,000</text></g><path class="chart-line chart-line--base" data-chart-base d="M96 236 L226 183 L356 130 L486 77 L616 24"></path><path class="chart-line chart-line--selected" data-chart-selected d="M96 236 L226 183 L356 130 L486 77 L616 24"></path><g class="chart-labels"><text x="96" y="264" text-anchor="middle">Start</text><text x="226" y="264" text-anchor="middle">Year 1</text><text x="356" y="264" text-anchor="middle">Year 2</text><text x="486" y="264" text-anchor="middle">Year 3</text><text x="616" y="264" text-anchor="end">Year 4</text></g></svg><p class="chart-card__summary" data-comparison-summary>Base rate: SONNWERK pays €18,000 at signing and €32,400 in total over four years.</p><ul class="chart-data" data-chart-values><li>Base rate: start €18,000; after year 1 €21,600; after year 2 €25,200; after year 3 €28,800; after year 4 €32,400.</li><li>Your selection: identical to the base rate.</li></ul></div>
+  <div class="scenario-block"><div><p class="kicker">Low and zero revenue visible</p><h3>Same online revenue every year: four-year total for SONNWERK</h3><p class="detail-note">Each row assumes the same online revenue in all four years and shows what SONNWERK pays in total, the one-time payment included. Difference is your selection minus the base rate: a minus means SONNWERK pays less.</p></div><div class="table-wrap table-wrap--dark" tabindex="0" aria-label="Scenario table, scrolls horizontally if needed"><table><thead><tr><th>Annual revenue</th><th>Base rate total</th><th>Your selection total</th><th>Difference</th></tr></thead><tbody data-scenario-body><tr><td>€0</td><td>€18,000</td><td>€18,000</td><td>€0</td></tr><tr><td>€10,000</td><td>€25,200</td><td>€25,200</td><td>€0</td></tr><tr><td>€20,000</td><td>€32,400</td><td>€32,400</td><td>€0</td></tr><tr><td>€50,000</td><td>€54,000</td><td>€54,000</td><td>€0</td></tr><tr><td>€100,000</td><td>€90,000</td><td>€90,000</td><td>€0</td></tr><tr><td>€250,000</td><td>€174,000</td><td>€174,000</td><td>€0</td></tr><tr><td>€700,000</td><td>€342,000</td><td>€342,000</td><td>€0</td></tr></tbody></table></div></div>
   <div class="deal-closing"><p>Every total is what SONNWERK pays and what Rustam receives: it is one payment seen from both sides, so it is shown once. Totals include the one-time payment.</p><p>The calculation measures payments before other costs; it is neither personal net income nor company profit. No discounting, inflation, financing or taxes are taken into account. All values are a basis for negotiation.</p></div>
 </div>
 </section>
@@ -2024,6 +2025,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
 
   var money = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
   var number = new Intl.NumberFormat('en-IE', { maximumFractionDigits: 0 });
+  // Chart plot area inside the 640 × 280 viewBox; the left margin leaves room for the euro axis labels.
+  var LEFT = 96, RIGHT = 616, TOP = 24, BOTTOM = 236;
 
   function formatMoney(value) { return money.format(value); }
   function formatRate(rate) {
@@ -2036,13 +2039,29 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
     return 'Your selection';
   }
   function points(values, minimum, maximum) {
-    var left = 48, right = 616, top = 24, bottom = 236;
     var range = Math.max(1, maximum - minimum);
     return values.map(function (value, index) {
-      var x = left + ((right - left) * index / (values.length - 1));
-      var y = bottom - ((value - minimum) / range * (bottom - top));
+      var x = LEFT + ((RIGHT - LEFT) * index / (values.length - 1));
+      var y = BOTTOM - ((value - minimum) / range * (BOTTOM - TOP));
       return (index ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
     }).join(' ');
+  }
+  // One plain sentence: what changes at signing, after four years, and from which year a lower upfront costs more.
+  function summary(result, meterValue) {
+    var base = result.baseline, selected = result.selected;
+    if (meterValue === 0) {
+      return 'Base rate: SONNWERK pays ' + formatMoney(base.upfront) + ' at signing and ' + formatMoney(base.total) + ' in total over four years.';
+    }
+    var atSigning = selected.upfront - base.upfront;
+    var text = selectionText(meterValue) + ': ' + formatMoney(Math.abs(atSigning)) + (atSigning < 0 ? ' less' : ' more') + ' at signing; after four years ';
+    text += result.difference === 0 ? 'the same total as the base rate.' : formatMoney(Math.abs(result.difference)) + (result.difference > 0 ? ' more' : ' less') + ' in total than the base rate.';
+    var crossYear = 0;
+    result.cumulative.selected.some(function (value, index) {
+      if (value > result.cumulative.baseline[index]) { crossYear = index + 1; return true; }
+      return false;
+    });
+    if (atSigning < 0 && crossYear) text += ' From year ' + crossYear + ' on, this split has cost more in total, because the higher share applies to every year\'s sales.';
+    return text;
   }
 
   function init(root, model) {
@@ -2106,18 +2125,13 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
       setText('[data-chart-y-top]', formatMoney(high));
       setText('[data-chart-y-mid]', formatMoney((high + low) / 2));
       setText('[data-chart-y-bottom]', formatMoney(low));
-      // At the base position both lines are the same line: label it once.
-      var same = meterValue === 0;
-      setText('[data-chart-series-base]', 'Base rate');
-      setText('[data-chart-series-selected]', same ? '' : selectionText(meterValue));
-      var comparison = result.difference === 0 ? 'the same as the base rate' : result.difference > 0 ? formatMoney(result.difference) + ' higher than the base rate' : formatMoney(Math.abs(result.difference)) + ' lower than the base rate';
-      setText('[data-comparison-summary]', same ? 'Base rate: after four years SONNWERK has paid ' + formatMoney(result.baseline.total) + ' in total.' : selectionText(meterValue) + ': after four years the total is ' + comparison + '.');
+      setText('[data-comparison-summary]', summary(result, meterValue));
       if (chartValues) {
         chartValues.replaceChildren();
         function describe(label, values) {
           return label + ': start ' + formatMoney(values[0]) + '; ' + values.slice(1).map(function (value, index) { return 'after year ' + (index + 1) + ' ' + formatMoney(value); }).join('; ') + '.';
         }
-        [describe('Base rate', baselineValues), same ? 'Your selection: identical to the base rate.' : describe(selectionText(meterValue), selectedValues)].forEach(function (text) {
+        [describe('Base rate', baselineValues), meterValue === 0 ? 'Your selection: identical to the base rate.' : describe(selectionText(meterValue), selectedValues)].forEach(function (text) {
           var item = document.createElement('li');
           item.textContent = text;
           chartValues.appendChild(item);
@@ -2127,6 +2141,7 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 520; }
     function update() {
       var meterValue = Number(meter.value);
       var terms = model.termsForMeter(meterValue);
+      meter.style.background = 'linear-gradient(to right,#E8A33D ' + meterValue + '%,rgba(242,235,220,.3) ' + meterValue + '%)';
       meter.setAttribute('aria-valuetext', 'One-time payment ' + formatMoney(terms.upfront) + '; share on the first one hundred thousand euros ' + formatRate(terms.rates[0]) + '.');
       setText('[data-upfront]', formatMoney(terms.upfront));
       setText('[data-first-rate]', formatRate(terms.rates[0]));
